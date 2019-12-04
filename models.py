@@ -2,6 +2,11 @@ from app import db
 import enum
 import datetime
 
+projects = db.Table('projects',
+                    db.Column('project_id', db.Integer, db.ForeignKey('project.project_id'), primary_key=True),
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+                    )
+
 
 class Project(db.Model):
     project_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
@@ -15,6 +20,8 @@ class User(db.Model):
     user_email = db.Column(db.String(50), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     tasks = db.relationship('Tasks', backref="user")
+    projects = db.relationship('Project', secondary=projects, lazy='subquery',
+                               backref=db.backref('projects', lazy=True))
 
 
 class Tasks(db.Model):
