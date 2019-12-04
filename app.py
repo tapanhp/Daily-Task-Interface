@@ -2,7 +2,6 @@ import json
 import os
 import flask
 import google_auth
-from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
 
 app = flask.Flask(__name__)
@@ -12,7 +11,7 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "daily_tasks.db"))
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
-db = SQLAlchemy(app)
+
 
 
 @app.route('/')

@@ -1,5 +1,8 @@
-from app import db
+from app import app
 import datetime
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy(app)
 
 projects = db.Table('projects',
                     db.Column('project_id', db.Integer, db.ForeignKey('project.project_id'), primary_key=True),
