@@ -1,7 +1,8 @@
 from flask import redirect
 from flask import render_template
 from flask import request
-from app import app, db
+from app import app
+from models import db
 from models import Tasks, Project, User
 
 
