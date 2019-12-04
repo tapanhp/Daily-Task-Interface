@@ -120,11 +120,9 @@
             <p class="mb-4 d-none d-md-block">
               <strong>Python Team.</strong>
             </p>
-
-            <button class="loginBtn loginBtn--google">
-                       Login with Google
-                        </button>
-
+            <form method="GET" action="{{ url_for('google_auth.login') }}">
+            <button type="submit" class="loginBtn loginBtn--google">Login with Google</button>
+            </form>
           </div>
 
         </div>
