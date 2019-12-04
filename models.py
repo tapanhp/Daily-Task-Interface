@@ -1,5 +1,4 @@
 from app import db
-import enum
 import datetime
 
 projects = db.Table('projects',
