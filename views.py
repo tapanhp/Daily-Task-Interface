@@ -1,8 +1,4 @@
-from flask import request,render_template,jsonify
-from app import app
-from flask import redirect
-from flask import render_template
-from flask import request
+from flask import request, render_template, jsonify
 from app import app
 from models import db
 from models import Tasks, Project, User
@@ -26,4 +22,3 @@ def create_task():
         except Exception as e:
             print("couldn't store task", e)
     return render_template("login.html")
-
