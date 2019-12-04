@@ -3,9 +3,10 @@ import os
 import flask
 import google_auth
 from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
 
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 app = flask.Flask(__name__)
 app.secret_key = "b']\xa0\x02\x94Rl\x15\x10z\x19\xdaEE\xbf\x08!'"
@@ -24,4 +25,4 @@ def index():
                                                                                                             indent=4) \
                + "</pre>"
 
-    return 'You are not currently logged in.'
+    return render_template('login.html')
