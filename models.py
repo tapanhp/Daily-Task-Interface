@@ -1,9 +1,12 @@
 import datetime
-import flask
 from flask_sqlalchemy import SQLAlchemy
+from marshmallow import fields
+
 from app import app
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 projects = db.Table('projects',
                     db.Column('project_id', db.Integer, db.ForeignKey('project.project_id'), primary_key=True),
@@ -32,6 +35,24 @@ class Tasks(db.Model):
     task_title = db.Column(db.String(500), unique=True, nullable=False)
     status = db.Column(db.String, nullable=False)
     reason = db.Column(db.Text, nullable=True)
-    date = db.Column(db.DateTime(timezone=False), default=datetime.datetime.utcnow)
+    date = db.Column(db.DateTime(timezone=False), default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+
+
+class ProjectSchema(ma.ModelSchema):
+    class Meta:
+        model = Project
+        sqla_session = db.session
+
+
+class TaskSchema(ma.ModelSchema):
+    class Meta:
+        model = Tasks
+        sqla_session = db.session
+
+
+class UserSchema(ma.ModelSchema):
+    class Meta:
+        model = User
+        sqla_session = db.session

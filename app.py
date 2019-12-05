@@ -24,12 +24,12 @@ def index():
     return render_template('login.html')
 
 
-from views import create_task, get_task, update_task, delete_task
+from views import create_task, read_task, update_task
 
 
 @app.route('/task/', methods=['GET'])
 def get():
-    return get_task()
+    return read_task()
 
 
 @app.route('/task/', methods=["POST"])
@@ -42,6 +42,6 @@ def update(id):
     return update_task(id)
 
 
-@app.route("/task/<int:id>", methods=["DELETE"])
-def delete(id):
-    return delete_task(id)
+# @app.route("/task/<int:id>", methods=["DELETE"])
+# def delete(id):
+#     return delete_task(id)
