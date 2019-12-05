@@ -13,7 +13,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 
-
 @app.route('/')
 def index():
     if google_auth.is_logged_in():
@@ -23,3 +22,26 @@ def index():
                + "</pre>"
 
     return render_template('login.html')
+
+
+from views import create_task, get_task, update_task, delete_task
+
+
+@app.route('/task/', methods=['GET'])
+def get():
+    return get_task()
+
+
+@app.route('/task/', methods=["POST"])
+def create():
+    return create_task()
+
+
+@app.route('/task/<int:id>', methods=['PUT'])
+def update(id):
+    return update_task(id)
+
+
+@app.route("/task/<int:id>", methods=["DELETE"])
+def delete(id):
+    return delete_task(id)
