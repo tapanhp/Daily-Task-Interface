@@ -44,15 +44,22 @@ class ProjectSchema(ma.ModelSchema):
     class Meta:
         model = Project
         sqla_session = db.session
-
-
-class TaskSchema(ma.ModelSchema):
-    class Meta:
-        model = Tasks
-        sqla_session = db.session
+        fields = ('project_id', 'project_name')
 
 
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
         sqla_session = db.session
+        fields = ('user_id', 'user_name', 'user_email')
+
+
+class TaskSchema(ma.ModelSchema):
+    class Meta:
+        model = Tasks
+        sqla_session = db.session
+        fields = ('task_id', 'task_title', 'status','reason','date','project_id','user_id')
+        project_id = ma.Nested(ProjectSchema)
+        user_id = ma.Nested(UserSchema)
+
+
