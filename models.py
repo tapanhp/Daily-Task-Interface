@@ -18,6 +18,9 @@ class Project(db.Model):
     project_name = db.Column(db.String(50), unique=True, nullable=False)
     tasks = db.relationship('Tasks', backref="project")
 
+    def __str__(self):
+        return self.project_name
+
 
 class User(db.Model):
     user_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
@@ -26,7 +29,10 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, unique=False, default=False)
     tasks = db.relationship('Tasks', backref="user")
     projects = db.relationship('Project', secondary=projects, lazy='subquery',
-                               backref=db.backref('projects', lazy=True))
+                               backref=db.backref('projects', lazy=True), passive_deletes='all')
+
+    def __str__(self):
+        return self.user_name
 
 
 class Tasks(db.Model):
@@ -37,6 +43,9 @@ class Tasks(db.Model):
     date = db.Column(db.DateTime(timezone=False), default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
     project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+
+    def __str__(self):
+        return self.task_title
 
 
 class ProjectSchema(ma.ModelSchema):
@@ -50,7 +59,7 @@ class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
         sqla_session = db.session
-        fields = ('user_id', 'user_name', 'user_email')
+        fields = ('user_id', 'user_name', 'user_email',)
 
 
 class TaskSchema(ma.ModelSchema):
