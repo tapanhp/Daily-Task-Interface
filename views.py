@@ -13,9 +13,17 @@ def create_task():
     if request:
         try:
             task_schema = TaskSchema()
-            task = task_schema.load(request.json, session=db.session).data
+            project = request.json.get('project')
+            title = request.json.get('task_title')
+            status = request.json.get('status')
+            reason = request.json.get('reason')
+            user = request.json.get('user')
+            user_obj = User.query.filter_by(user_name=user).first()
+            project_obj = Project.query.filter_by(project_name=project).first()
+            task = Tasks(task_title=title, status=status, reason=reason, project=project_obj, user=user_obj)
             db.session.add(task)
             db.session.commit()
+            print(task.project.project_name)
             return jsonify(task_schema.dump(task).data)
         except Exception as e:
             print("couldn't store task", e)
