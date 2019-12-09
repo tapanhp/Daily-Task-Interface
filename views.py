@@ -1,8 +1,37 @@
-from flask import request, jsonify
+from flask import request, render_template, make_response
 from models import db
 from models import Tasks, Project, User, TaskSchema, ProjectSchema, UserSchema
 from response_utils import send_error_response, send_success_response
 import google_auth
+import pdfkit
+import datetime
+
+
+def generate_report():
+    try:
+        tasks = Tasks.query.all()
+        print("tasks",tasks)
+        projects = Project.query.all()
+        print("projects",projects)
+        if tasks and projects:
+            context = {
+                'tasks': tasks,
+                'projects': projects,
+            }
+            rendered = render_template("report.html", context=context)
+            print(rendered)
+            pdf = pdfkit.from_string(rendered, False)
+            print("pdf",pdf)
+            response = make_response(pdf)
+            response.headers['Content_Type'] = 'application/pdf'
+            response.headers['Content-Disposition'] = 'attachment; filename=Daily_report.pdf'
+            return response
+        message = "Tasks or Projects are none"
+        return send_error_response(message)
+    except Exception as e:
+        print(e)
+        message = "Error in generating tasks"
+        return send_error_response(message)
 
 
 def get_all_tasks():
@@ -21,19 +50,21 @@ def get_all_tasks():
         return send_error_response(message)
 
 
-def get_task(user_name):
+def get_task(user_id):
     try:
-        task = Tasks.query.filter_by(Tasks.user.user_name == user_name)
+        user = Tasks.query.get(user_id)
+        task = Tasks.query.filter_by(user=user).all()
+        print(task)
         if not task:
-            message = "There is no task of user" + user_name
+            message = "There is no task of user" + user.user_name
             return send_success_response(message)
         task_schema = TaskSchema(many=True)
-        message = "Successfully retrieved task of " + user_name
+        message = "Successfully retrieved task of " + user.user_name
         data = task_schema.dump(task).data
         return send_success_response(message, data)
     except Exception as e:
         print(e)
-        message = "Error in retrieving task of " + user_name
+        message = "Error in retrieving task of " + str(user_id)
         return send_error_response(message)
 
 

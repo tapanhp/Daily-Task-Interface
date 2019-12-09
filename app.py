@@ -13,7 +13,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 from views import create_task, get_task, get_all_tasks, update_task, delete_task, get_all_projects, create_project, \
-    delete_project, create_user
+    delete_project, create_user ,generate_report
 
 
 @app.route('/')
@@ -29,9 +29,9 @@ def get_tasks():
     return get_all_tasks()
 
 
-@app.route('/task/<string:user_name>/', methods=['GET'])
-def get_task_main(user_name):
-    return get_task(user_name)
+@app.route('/task/<int:user_id>/', methods=['GET'])
+def get_task_main(user_id):
+    return get_task(user_id)
 
 
 @app.route('/task/', methods=["POST"])
@@ -62,3 +62,7 @@ def create_project_main():
 @app.route("/project/<int:project_id>/", methods=["DELETE"])
 def delete_project_main(project_id):
     return delete_project(project_id)
+
+@app.route("/report/", methods=["GET","POST"])
+def generate_report_main():
+    return generate_report()
