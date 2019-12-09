@@ -1,18 +1,25 @@
 from flask import request, jsonify
 from models import db
 from models import Tasks, Project, User, TaskSchema, ProjectSchema, UserSchema
+from response_utils import send_error_response, send_success_response
 
 
 def read_task():
-    task = Tasks.query.all()
-    task_schema = TaskSchema(many=True)
-    return jsonify(task_schema.dump(task).data)
+    try:
+        task = Tasks.query.all()
+        task_schema = TaskSchema(many=True)
+        data = task_schema.dump(task).data
+        message = "Successfully retrieved tasks"
+        return send_success_response(message, data)
+    except Exception as e:
+        print(e)
+        message = "Error in retrieving tasks"
+        return send_error_response(message)
 
 
 def create_task():
     if request:
         try:
-            task_schema = TaskSchema()
             project = request.json.get('project')
             title = request.json.get('task_title')
             status = request.json.get('status')
@@ -23,11 +30,15 @@ def create_task():
             task = Tasks(task_title=title, status=status, reason=reason, project=project_obj, user=user_obj)
             db.session.add(task)
             db.session.commit()
-            print(task.project.project_name)
-            return jsonify(task_schema.dump(task).data)
+            message = "Successfully saved task"
+            return send_success_response(message)
+        except KeyError as e:
+            print(e)
+            return send_error_response()
         except Exception as e:
             print("couldn't store task", e)
-            return jsonify({'Task': ''})
+            message = "Error in storing task"
+            return send_error_response(message)
 
 
 def update_task(id):
@@ -43,7 +54,6 @@ def update_task(id):
     except Exception as e:
         print("not updated due to ", e)
         return jsonify("Task not updated")
-
 
 # def delete_task(id):
 #     task = Tasks.query.get(id)
