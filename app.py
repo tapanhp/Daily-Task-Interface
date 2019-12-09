@@ -12,36 +12,53 @@ database_file = "sqlite:///{}".format(os.path.join(project_dir, "daily_tasks.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
+from views import create_task, get_task, get_all_tasks, update_task, delete_task, get_all_projects, create_project, \
+    delete_project, create_user
+
 
 @app.route('/')
 def index():
     if google_auth.is_logged_in():
-        user_info = google_auth.get_user_info()
-        return '<div>You are currently logged in as ' + user_info['given_name'] + '<div><pre>' + json.dumps(user_info,
-                                                                                                            indent=4) \
-               + "</pre>"
+        return create_user()
 
     return render_template('login.html')
 
 
-from views import create_task, read_task, update_task
+@app.route('/tasks/', methods=['GET'])
+def get_tasks():
+    return get_all_tasks()
 
 
-@app.route('/task/', methods=['GET'])
-def get():
-    return read_task()
+@app.route('/task/<string:user_name>/', methods=['GET'])
+def get_task_main(user_name):
+    return get_task(user_name)
 
 
 @app.route('/task/', methods=["POST"])
-def create():
+def create_task_main():
     return create_task()
 
 
-@app.route('/task/<int:id>', methods=['PUT'])
-def update(id):
-    return update_task(id)
+@app.route('/task/<int:task_id>/', methods=['PUT'])
+def update_task_main(task_id):
+    return update_task(task_id)
 
 
-# @app.route("/task/<int:id>", methods=["DELETE"])
-# def delete(id):
-#     return delete_task(id)
+@app.route("/task/<int:task_id>/", methods=["DELETE"])
+def delete_task_main(task_id):
+    return delete_task(task_id)
+
+
+@app.route("/project/", methods=["GET"])
+def get_projects():
+    return get_all_projects()
+
+
+@app.route('/project/', methods=["POST"])
+def create_project_main():
+    return create_project()
+
+
+@app.route("/project/<int:project_id>/", methods=["DELETE"])
+def delete_project_main(project_id):
+    return delete_project(project_id)
