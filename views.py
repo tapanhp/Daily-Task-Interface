@@ -46,6 +46,7 @@ def create_task():
         user_name = request.json.get('user_name')
         user_obj = User.query.filter_by(user_name=user_name).first()
         project_obj = Project.query.filter_by(project_name=project_name).first()
+        user_obj.projects.append(project_obj)
         task = Tasks(task_title=title, status=status, reason=reason, project=project_obj, user=user_obj)
         db.session.add(task)
         db.session.commit()
@@ -80,6 +81,7 @@ def update_task(task_id):
 def delete_task(task_id):
     try:
         task = Tasks.query.get(task_id)
+
         db.session.delete(task)
         db.session.commit()
         message = "Deleted task successfully"
