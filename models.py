@@ -1,6 +1,5 @@
 import datetime
 from flask_sqlalchemy import SQLAlchemy
-from marshmallow import fields
 
 from app import app
 from flask_marshmallow import Marshmallow
@@ -24,7 +23,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     user_name = db.Column(db.String(50), unique=True, nullable=False)
     user_email = db.Column(db.String(50), unique=True, nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, unique=False, default=False)
     tasks = db.relationship('Tasks', backref="user")
     projects = db.relationship('Project', secondary=projects, lazy='subquery',
                                backref=db.backref('projects', lazy=True))
@@ -58,8 +57,4 @@ class TaskSchema(ma.ModelSchema):
     class Meta:
         model = Tasks
         sqla_session = db.session
-        fields = ('task_id', 'task_title', 'status','reason','date','project_id','user_id')
-        project_id = ma.Nested(ProjectSchema)
-        user_id = ma.Nested(UserSchema)
-
-
+        fields = ('task_id', 'task_title', 'status', 'reason', 'date', 'project', 'user')
