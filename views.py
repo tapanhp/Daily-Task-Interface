@@ -2,11 +2,15 @@ from flask import request, jsonify
 from models import db
 from models import Tasks, Project, User, TaskSchema, ProjectSchema, UserSchema
 from response_utils import send_error_response, send_success_response
+import google_auth
 
 
-def read_task():
+def get_all_tasks():
     try:
         task = Tasks.query.all()
+        if not task:
+            message = "There is no task"
+            return send_success_response(message)
         task_schema = TaskSchema(many=True)
         data = task_schema.dump(task).data
         message = "Successfully retrieved tasks"
@@ -17,46 +21,127 @@ def read_task():
         return send_error_response(message)
 
 
-def create_task():
-    if request:
-        try:
-            project = request.json.get('project')
-            title = request.json.get('task_title')
-            status = request.json.get('status')
-            reason = request.json.get('reason')
-            user = request.json.get('user')
-            user_obj = User.query.filter_by(user_name=user).first()
-            project_obj = Project.query.filter_by(project_name=project).first()
-            task = Tasks(task_title=title, status=status, reason=reason, project=project_obj, user=user_obj)
-            db.session.add(task)
-            db.session.commit()
-            message = "Successfully saved task"
-            return send_success_response(message)
-        except KeyError as e:
-            print(e)
-            return send_error_response()
-        except Exception as e:
-            print("couldn't store task", e)
-            message = "Error in storing task"
-            return send_error_response(message)
-
-
-def update_task(id):
+def get_task(user_name):
     try:
-        task = Tasks.query.get(task_id=id)
-        task.project_id = request.json.get('project', task.project_id)
-        task.title = request.json.get('task_title', task.task_title)
+        task = Tasks.query.filter_by(Tasks.user.user_name == user_name)
+        if not task:
+            message = "There is no task of user" + user_name
+            return send_success_response(message)
+        task_schema = TaskSchema(many=True)
+        message = "Successfully retrieved task of " + user_name
+        data = task_schema.dump(task).data
+        return send_success_response(message, data)
+    except Exception as e:
+        print(e)
+        message = "Error in retrieving task of " + user_name
+        return send_error_response(message)
+
+
+def create_task():
+    try:
+        project_name = request.json.get('project_name')
+        title = request.json.get('task_title')
+        status = request.json.get('status')
+        reason = request.json.get('reason')
+        user_name = request.json.get('user_name')
+        user_obj = User.query.filter_by(user_name=user_name).first()
+        project_obj = Project.query.filter_by(project_name=project_name).first()
+        task = Tasks(task_title=title, status=status, reason=reason, project=project_obj, user=user_obj)
+        db.session.add(task)
+        db.session.commit()
+        message = "Successfully saved task"
+        return send_success_response(message)
+    except KeyError as e:
+        print(e)
+        return send_error_response()
+    except Exception as e:
+        print(e)
+        message = "Error in storing task"
+        return send_error_response(message)
+
+
+def update_task(task_id):
+    try:
+        task = Tasks.query.get(task_id)
+        task.task_title = request.json.get('task_title', task.task_title)
         task.status = request.json.get('status', task.status)
         task.reason = request.json.get('reason', task.reason)
-        task.user_id = request.json.get('user', task.user_id)
         db.session.commit()
-        return jsonify({'Task': task})
+        task_schema = TaskSchema()
+        data = task_schema.dump(task).data
+        message = "Successfully updated tasks"
+        return send_success_response(message, data)
     except Exception as e:
-        print("not updated due to ", e)
-        return jsonify("Task not updated")
+        print(e)
+        message = "Error in updating task"
+        return send_error_response(message)
 
-# def delete_task(id):
-#     task = Tasks.query.get(id)
-#     db.session.delete(task)
-#     db.session.commit()
-#     return jsonify({'result': True})
+
+def delete_task(task_id):
+    try:
+        task = Tasks.query.get(task_id)
+        db.session.delete(task)
+        db.session.commit()
+        message = "Deleted task successfully"
+        return send_success_response(message)
+    except Exception as e:
+        print(e)
+        message = "Error in deleting task"
+        return send_error_response(message)
+
+
+def create_project():
+    try:
+        project_name = request.json.get('project_name')
+        project = Project(project_name=project_name)
+        db.session.add(project)
+        db.session.commit()
+        message = "Successfully created project"
+        return send_success_response(message)
+    except Exception as e:
+        print(e)
+        message = "Error in creating projects"
+        return send_error_response(message)
+
+
+def get_all_projects():
+    try:
+        project = Project.query.all()
+        if not project:
+            message = "There is no project available"
+            return send_success_response(message)
+        project_schema = ProjectSchema(many=True)
+        data = project_schema.dump(project).data
+        message = "Successfully retrieved projects"
+        return send_success_response(message, data)
+    except Exception as e:
+        print(e)
+        message = "Error in retrieving projects"
+        return send_error_response(message)
+
+
+def delete_project(project_id):
+    try:
+        project = Project.query.get(project_id)
+        db.session.delete(project)
+        db.session.commit()
+        message = "Deleted project successfully"
+        return send_success_response(message)
+    except Exception as e:
+        print(e)
+        message = "Error in deleting project"
+        return send_error_response(message)
+
+
+def create_user():
+    try:
+        user_info = google_auth.get_user_info()
+        user = User(user_name=user_info['name'], user_email=user_info['email'])
+        db.session.add(user)
+        db.session.commit()
+        message = "User created successfully"
+        return send_success_response(message)
+    except Exception as e:
+        print(e)
+        message = "Error in creating user"
+        return send_error_response(message)
