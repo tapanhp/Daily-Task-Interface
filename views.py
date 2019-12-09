@@ -21,7 +21,7 @@ def generate_report():
             rendered = render_template("report.html", context=context)
             print(rendered)
             pdf = pdfkit.from_string(rendered, False)
-            print("pdf",pdf)
+            print(pdf)
             response = make_response(pdf)
             response.headers['Content_Type'] = 'application/pdf'
             response.headers['Content-Disposition'] = 'attachment; filename=Daily_report.pdf'
