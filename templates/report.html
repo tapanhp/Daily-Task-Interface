@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
+Date-{{ context['date'] }}
 {% for project in context["projects"] %}
     <h1>Project- {{ project.project_name }}</h1>
     {% for task in context["tasks"] %}
@@ -8,7 +9,9 @@
            <h4>{{ task.user.user_name }}</h4>
            <p>Task Details:{{ task.task_title }}</p>
            <p>Status:{{ task.status }}</p>
+                  {% if task.reason %}
            <p>Reason:{{ task.reason }}</p>
+                  {% endif %}
         {% endif %}
     {% endfor %}
 {% endfor %}
