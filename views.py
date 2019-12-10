@@ -16,11 +16,11 @@ def generate_report():
             context = {
                 'tasks': tasks,
                 'projects': projects,
-                'date':datenow,
+                'date': datenow,
             }
             rendered = render_template("report.html", context=context)
             pdf = pdfkit.from_string(rendered, False)
-            file_name= str(datetime.datetime.now().date()) + '_Task_Report'
+            file_name = str(datetime.datetime.now().date()) + '_Task_Report'
             response = make_response(pdf)
             response.headers['Content_Type'] = 'application/pdf'
             response.headers['Content-Disposition'] = 'attachment; filename={}.pdf'.format(file_name)
@@ -167,6 +167,10 @@ def delete_project(project_id):
 def create_user():
     try:
         user_info = google_auth.get_user_info()
+        user = User.query.filter_by(user_name=user_info['name'])
+        if user:
+            message = "User already exists"
+            return send_success_response(message)
         if user_info['email'] == "tapan.inexture@gmail.com":
             user = User(user_name=user_info['name'], user_email=user_info['email'], is_admin=True)
         else:
