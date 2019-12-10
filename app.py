@@ -86,7 +86,7 @@ def delete_project_main(project_id):
     return delete_project(project_id)
 
 
-@app.route("/report/", methods=["GET", "POST"])
+@app.route("/report/", methods=["GET"])
 @login_required
 def generate_report_main():
     return generate_report()
