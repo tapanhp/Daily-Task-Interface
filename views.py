@@ -169,7 +169,10 @@ def delete_project(project_id):
 def create_user():
     try:
         user_info = google_auth.get_user_info()
-        user = User(user_name=user_info['name'], user_email=user_info['email'])
+        if user_info['email'] == "tapan.inexture@gmail.com":
+            user = User(user_name=user_info['name'], user_email=user_info['email'], is_admin=True)
+        else:
+            user = User(user_name=user_info['name'], user_email=user_info['email'])
         db.session.add(user)
         db.session.commit()
         message = "User created successfully"
