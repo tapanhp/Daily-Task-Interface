@@ -13,14 +13,18 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 from views import create_task, get_task, get_all_tasks, update_task, delete_task, get_all_projects, create_project, \
-    delete_project, create_user ,generate_report
+    delete_project, create_user, generate_report
 
 
 @app.route('/')
 def index():
     if google_auth.is_logged_in():
-        return create_user()
-
+        response = create_user()
+        response = json.loads(response.get_data())
+        if response['status']:
+            return render_template('tables.html')
+        else:
+            return render_template('login.html')
     return render_template('login.html')
 
 
@@ -63,6 +67,7 @@ def create_project_main():
 def delete_project_main(project_id):
     return delete_project(project_id)
 
-@app.route("/report/", methods=["GET","POST"])
+
+@app.route("/report/", methods=["GET", "POST"])
 def generate_report_main():
     return generate_report()
