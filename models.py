@@ -40,7 +40,7 @@ class Tasks(db.Model):
     task_title = db.Column(db.String(500), unique=True, nullable=False)
     status = db.Column(db.String, nullable=False)
     reason = db.Column(db.Text, nullable=True)
-    date = db.Column(db.DateTime(timezone=False), default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    date = db.Column(db.Date, default=datetime.datetime.utcnow().date(), onupdate=datetime.datetime.utcnow().date())
     project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 

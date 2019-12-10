@@ -9,22 +9,21 @@ import datetime
 
 def generate_report():
     try:
-        tasks = Tasks.query.all()
-        print("tasks",tasks)
+        datenow = datetime.datetime.utcnow().date()
+        tasks = Tasks.query.filter_by(date=datenow).all()
         projects = Project.query.all()
-        print("projects",projects)
         if tasks and projects:
             context = {
                 'tasks': tasks,
                 'projects': projects,
+                'date':datenow,
             }
             rendered = render_template("report.html", context=context)
-            print(rendered)
             pdf = pdfkit.from_string(rendered, False)
-            print(pdf)
+            file_name= str(datetime.datetime.now().date()) + '_Task_Report'
             response = make_response(pdf)
             response.headers['Content_Type'] = 'application/pdf'
-            response.headers['Content-Disposition'] = 'attachment; filename=Daily_report.pdf'
+            response.headers['Content-Disposition'] = 'attachment; filename={}.pdf'.format(file_name)
             return response
         message = "Tasks or Projects are none"
         return send_error_response(message)
@@ -112,7 +111,6 @@ def update_task(task_id):
 def delete_task(task_id):
     try:
         task = Tasks.query.get(task_id)
-
         db.session.delete(task)
         db.session.commit()
         message = "Deleted task successfully"
