@@ -44,6 +44,9 @@
                                     <th>Edit</th>
                                 </tr>
                                 </thead>
+                                <tbody>
+
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -67,19 +70,16 @@
     </div>
     <!-- /#wrapper -->
 {% endblock %}
-
 {% block script %}
     <script>
-        window.onload = function append_data_table() {
-            $.ajax({
+$(document).ready(function() {
+  $.ajax({
                 url: "http://127.0.0.1:5000/tasks/",
                 type: 'GET',
                 dataType: 'json', // added data type
                 success: function (response) {
-                    console.log(response);
-                    var task_data = '<tbody>';
                     for (var i = 0; i < response["data"].length; i++) {
-                        task_data += '<tr>';
+                        var task_data = '<tr>';
                         task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
                         task_data += '<td>' + response["data"][i]["project"]["project_name"] + '</td>';
                         task_data += '<td>' + response["data"][i]["task_title"] + '</td>';
@@ -87,11 +87,13 @@
                         task_data += '<td>' + response["data"][i]["date"] + '</td>';
                         task_data += "<td><a class='nav-link' href='edit.html'><i class='fa fa-pencil-square-o'></i></td>";
                         task_data += '</tr>';
+                        $('#dataTable tbody').append(task_data);
                     }
-                    task_data += '</tbody>';
-                    $('#dataTable').append(task_data);
+                    $('#dataTable').DataTable()
                 }
             });
-        }
-    </script>
+
+});
+</script>
 {% endblock %}
+

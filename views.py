@@ -56,9 +56,8 @@ def get_all_tasks():
 
 def get_task(user_id):
     try:
-        user = Tasks.query.get(user_id)
+        user = User.query.get(user_id)
         task = Tasks.query.filter_by(user=user).all()
-        print(task)
         if not task:
             message = "There is no task of user" + user.user_name
             return send_success_response(message)
@@ -98,7 +97,6 @@ def create_task():
 
 def update_task(task_id):
     try:
-        time = datetime.datetime.utcnow().strftime("%H:%M")
         task = Tasks.query.get(task_id)
         task.task_title = request.json.get('task_title', task.task_title)
         task.status = request.json.get('status', task.status)
