@@ -6,7 +6,7 @@ Date-{{ context['date'] }}
     <h1>Project- {{ project.project_name }}</h1>
     {% for task in context["tasks"] %}
        {% if project.project_id == task.project_id %}
-           <h4>{{ task.user.user_name }}</h4>
+           <h4>Name:{{ task.user.user_name }}</h4>
            <p>Task Details:{{ task.task_title }}</p>
            <p>Status:{{ task.status }}</p>
                   {% if task.reason %}
@@ -15,5 +15,13 @@ Date-{{ context['date'] }}
         {% endif %}
     {% endfor %}
 {% endfor %}
+
+
+{#{Date-{{ context['date'] }}}#}
+{#{% for task in context['tasks'] %}#}
+{#    <p>{{ task.project.project_name }}</p>#}
+{##}
+{##}
+{#{% endfor %}#}
 </body>
 </html>

@@ -9,13 +9,18 @@ import datetime
 
 def generate_report():
     try:
+        task_project = []
         datenow = datetime.datetime.utcnow().date()
         tasks = Tasks.query.filter_by(date=datenow).all()
-        projects = Project.query.all()
-        if tasks and projects:
+        for task in tasks:
+            projects = list(Project.query.filter_by(project_id=task.project_id))
+            task_project.append(projects)
+        from itertools import chain
+        task_project = set(chain.from_iterable(task_project))
+        if tasks and task_project:
             context = {
                 'tasks': tasks,
-                'projects': projects,
+                'projects': task_project,
                 'date': datenow,
             }
             rendered = render_template("report.html", context=context)
@@ -25,7 +30,7 @@ def generate_report():
             response.headers['Content_Type'] = 'application/pdf'
             response.headers['Content-Disposition'] = 'attachment; filename={}.pdf'.format(file_name)
             return response
-        message = "Tasks or Projects are none"
+        message = "Tasks or Projects are empty"
         return send_error_response(message)
     except Exception as e:
         print(e)
