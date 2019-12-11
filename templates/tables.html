@@ -1,108 +1,97 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div id="wrapper">
-    <!-- Sidebar -->
-    <ul class="sidebar navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="tables.html">
-          <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
-      </li>
-       <li class="nav-item">
-        <a class="nav-link" href="select.html">
-          <i class="fa fa-plus-circle"></i>
-          <span>Create Task</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="admin.html">
-          <i class="fa fa-user"></i>
-          <span>Admin</span>
-        </a>
-      </li>
-    </ul>
-    <div id="content-wrapper">
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="tables.html">
+                    <i class="fa fa-fw fa-table"></i>
+                    <span>Tables</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="select.html">
+                    <i class="fa fa-plus-circle"></i>
+                    <span>Create Task</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admin.html">
+                    <i class="fa fa-user"></i>
+                    <span>Admin</span>
+                </a>
+            </li>
+        </ul>
+        <div id="content-wrapper">
 
-      <div class="container-fluid">
-        <!-- DataTables Example -->
-        <div class="card mb-3">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Task Table</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Project</th>
-                    <th>Task</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Edit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <script>
-                  $.ajax({
-                    url: "https://",
-                    type: 'GET',
-                    dataType: 'json', // added data type
-                    success: function (res) {
-                      var task_data = '';
-                      $.each(res, function (key, value) {
+            <div class="container-fluid">
+                <!-- DataTables Example -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-table"></i>
+                        Task Table
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Project</th>
+                                    <th>Task</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Edit</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+
+            </div>
+            <!-- /.container-fluid -->
+
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+{% endblock %}
+
+{% block script %}
+    <script>
+        window.onload = function append_data_table() {
+            $.ajax({
+                url: "http://127.0.0.1:5000/tasks/",
+                type: 'GET',
+                dataType: 'json', // added data type
+                success: function (response) {
+                    console.log(response);
+                    var task_data = '<tbody>';
+                    for (var i = 0; i < response["data"].length; i++) {
                         task_data += '<tr>';
-                        task_data += '<td>' + value.name + '</td>';
-                        task_data += '<td>' + value.project + '</td>';
-                        task_data += '<td>' + value.task_title + '</td>';
-                        task_data += '<td>' + value.status + '</td>';
-                        task_data += '<td>' + value.date + '</td>';
+                        task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["project"]["project_name"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["task_title"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["status"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["date"] + '</td>';
                         task_data += "<td><a class='nav-link' href='edit.html'><i class='fa fa-pencil-square-o'></i></td>";
                         task_data += '</tr>';
-
-                      })
-                      $('#task_table').append(task_data);
                     }
-                  });
-                </script>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>Green</td>
-                    <td>2011/04/25</td>
-                    <td><a class="nav-link" href="edit.html"><i class="fa fa-pencil-square-o"></i></td>
-                  </tr>
-                  <tr>
-                    <td>Garrett Winters</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>Yellow</td>
-                    <td>2011/07/25</td>
-                    <td><a class="nav-link" href="edit.html"><i class="fa fa-pencil-square-o"></i></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
-
-      </div>
-      <!-- /.container-fluid -->
-
-      <!-- Sticky Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright © Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
-
-    </div>
-    <!-- /.content-wrapper -->
-  </div>
-  <!-- /#wrapper -->
+                    task_data += '</tbody>';
+                    $('#dataTable').append(task_data);
+                }
+            });
+        }
+    </script>
 {% endblock %}

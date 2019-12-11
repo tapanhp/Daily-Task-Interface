@@ -1,5 +1,6 @@
 import datetime
 from flask_sqlalchemy import SQLAlchemy
+from marshmallow import fields
 
 from app import app
 from flask_marshmallow import Marshmallow
@@ -59,11 +60,13 @@ class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
         sqla_session = db.session
-        fields = ('user_id', 'user_name', 'user_email',)
+        fields = ('user_id', 'user_name')
 
 
 class TaskSchema(ma.ModelSchema):
     class Meta:
         model = Tasks
         sqla_session = db.session
-        fields = ('task_id', 'task_title', 'status', 'reason', 'date', 'project', 'user')
+
+    project = fields.Nested(ProjectSchema)
+    user = fields.Nested(UserSchema)
