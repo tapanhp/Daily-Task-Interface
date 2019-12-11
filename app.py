@@ -39,19 +39,19 @@ def index():
 
 
 @app.route('/tasks/', methods=['GET'])
-@login_required
+# @login_required
 def get_tasks():
     return get_all_tasks()
 
 
 @app.route('/task/<int:user_id>/', methods=['GET'])
-@login_required
+# @login_required
 def get_task_main(user_id):
     return get_task(user_id)
 
 
 @app.route('/task/', methods=["POST"])
-@login_required
+# @login_required
 def create_task_main():
     return create_task()
 

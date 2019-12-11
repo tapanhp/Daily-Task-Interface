@@ -93,6 +93,7 @@ def create_task():
 
 def update_task(task_id):
     try:
+        time = datetime.datetime.utcnow().strftime("%H:%M")
         task = Tasks.query.get(task_id)
         task.task_title = request.json.get('task_title', task.task_title)
         task.status = request.json.get('status', task.status)
