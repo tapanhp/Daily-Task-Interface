@@ -53,7 +53,7 @@
 $(document).ready(function() {
     var userid={{ context['user_id'] }}
   $.ajax({
-                url: "http://127.0.0.1:5000/task/6/",
+                url: "http://127.0.0.1:5000/task/"+userid+"/",
                 type: 'GET',
                 dataType: 'json', // added data type
                 success: function (response) {
