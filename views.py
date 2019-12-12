@@ -1,11 +1,10 @@
-from flask import request, render_template, make_response,session
+from flask import request, render_template, make_response, session
 from models import db
 from models import Tasks, Project, User, TaskSchema, ProjectSchema, UserSchema
 from response_utils import send_error_response, send_success_response
 import google_auth
 import pdfkit
 import datetime
-
 
 
 def generate_report():
@@ -69,6 +68,22 @@ def get_task(user_id):
     except Exception as e:
         print(e)
         message = "Error in retrieving task of " + str(user_id)
+        return send_error_response(message)
+
+
+def get_task_info(task_id):
+    try:
+        task = Tasks.query.get(task_id)
+        if not task:
+            message = "There is no task with that id"
+            return send_success_response(message)
+        task_schema = TaskSchema()
+        message = "Successfully retrieved task of " + task.task_title
+        data = task_schema.dump(task).data
+        return send_success_response(message, data)
+    except Exception as e:
+        print(e)
+        message = "Error in retrieving task of " + str(task_id)
         return send_error_response(message)
 
 

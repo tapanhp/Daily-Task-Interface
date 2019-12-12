@@ -58,13 +58,14 @@ $(document).ready(function() {
                 dataType: 'json', // added data type
                 success: function (response) {
                     for (var i = 0; i < response["data"].length; i++) {
+                        var x=parseInt(response['data'][i]['task_id']);
                         var task_data = '<tr>';
                         task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
                         task_data += '<td>' + response["data"][i]["project"]["project_name"] + '</td>';
                         task_data += '<td>' + response["data"][i]["task_title"] + '</td>';
                         task_data += '<td>' + response["data"][i]["status"] + '</td>';
                         task_data += '<td>' + response["data"][i]["date"] + '</td>';
-                        task_data += "<td><a class='nav-link' href='{{ url_for('render_edit') }}'><i class='fa fa-pencil-square-o'></i></td>";
+                        task_data += "<td><a class='nav-link' href='{{ url_for('render_edit',task_id=2) }}'><i class='fa fa-pencil-square-o'></i></td>";
                         task_data += '</tr>';
                         $('#dataTable tbody').append(task_data);
                     }

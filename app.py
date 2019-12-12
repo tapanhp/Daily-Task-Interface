@@ -13,7 +13,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 from views import create_task, get_task, get_all_tasks, update_task, delete_task, get_all_projects, create_project, \
-    delete_project, create_user, generate_report
+    delete_project, create_user, generate_report, get_task_info
 
 
 def login_required(func):
@@ -30,12 +30,12 @@ def login_required(func):
 def index():
     if google_auth.is_logged_in():
         response = create_user()
-        context={
-            'user_id':session['user'],
-                 }
+        context = {
+            'user_id': session['user'],
+        }
         response = json.loads(response.get_data())
         if response['status']:
-            return render_template('tables.html',context=context)
+            return render_template('tables.html', context=context)
         else:
             return render_template('login.html')
     return render_template('login.html')
@@ -53,6 +53,12 @@ def get_task_main(user_id):
     return get_task(user_id)
 
 
+@app.route('/taskinfo/<int:task_id>/', methods=['GET'])
+# @login_required
+def get_info_task(task_id):
+    return get_task_info(task_id)
+
+
 @app.route('/task/', methods=["POST"])
 # @login_required
 def create_task_main():
@@ -60,31 +66,31 @@ def create_task_main():
 
 
 @app.route('/task/<int:task_id>/', methods=['PUT'])
-@login_required
+# @login_required
 def update_task_main(task_id):
     return update_task(task_id)
 
 
 @app.route("/task/<int:task_id>/", methods=["DELETE"])
-#@login_required
+# @login_required
 def delete_task_main(task_id):
     return delete_task(task_id)
 
 
 @app.route("/project/", methods=["GET"])
-#@login_required
+# @login_required
 def get_projects():
     return get_all_projects()
 
 
 @app.route('/project/', methods=["POST"])
-#@login_required
+# @login_required
 def create_project_main():
     return create_project()
 
 
 @app.route("/project/<int:project_id>/", methods=["DELETE"])
-#@login_required
+# @login_required
 def delete_project_main(project_id):
     return delete_project(project_id)
 
@@ -100,7 +106,7 @@ def render_table():
     context = {
         'user_id': session['user'],
     }
-    return render_template('tables.html',context=context)
+    return render_template('tables.html', context=context)
 
 
 @app.route("/admin/")
@@ -115,9 +121,17 @@ def render_create():
 
 @app.route("/select/")
 def render_select():
-    return render_template('select.html')
+    response = get_all_projects()
+    response = json.loads(response.get_data())
+    return render_template('select.html', context=response['data'])
 
 
-@app.route("/edit/")
-def render_edit():
-    return render_template('edit.html')
+@app.route("/edit/<int:task_id>")
+def render_edit(task_id):
+    response_project = json.loads(get_all_projects().get_data())
+    response_task = json.loads(get_task_info(task_id).get_data())
+    context = {
+        'projects': response_project['data'],
+        'task': response_task['data']
+    }
+    return render_template('edit.html', context=context)
