@@ -11,20 +11,58 @@
                 </div>
                 <div class="card-body">
                     <div class="container">
-                        <form id="form">
-                            <div class="form-group">
+                        <form id="">
+                            <div class="form-group row">
+                               <div class="col-sm-4">
                                 <label for="exampleFormControlSelect1">Project</label>
                                 <select class="form-control" >
                                      {% for project in context %}
                                         <option value="{{  project['project_id'] }}">{{ project['project_name'] }}</option>
                                     {% endfor %}
                                 </select>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-4">
-                                    <a class="nav-link" href="{{ url_for('render_create') }}"><i class="fa fa-plus-circle"></i> Add
-                                        Task</a>
+                               <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <button class="btn btn-blue" type="button" id="add_task">
+                                    <i class="fa fa-plus-circle"></i> Add
+                                        Task</button>
+
                                 </div>
+                            </div>
+                               </div>
+                                 <div class="col-sm-8" id="div2" style="display:none" >
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Task</label>
+                        <textarea class="form-control" id="formGroupExampleInput" rows="3" placeholder="Task Details"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Status</label>
+                        <select class="form-control" id="exampleFormControlSelect1" name="form_select" onchange="showDiv('hidden_div', this)">
+                            <option value="0">Green</option>
+                            <option value="1">Yellow</option>
+                            <option value="2">Red</option>
+                        </select>
+                        <script>
+                            function showDiv(divId, element)
+                                {
+                                    document.getElementById(divId).style.display = element.value == 0 ? 'none' : 'block';
+                                }
+                        </script>
+                    </div>
+                    <div class="form-group" id="hidden_div">
+                        <label for="exampleFormControlTextarea1">Reason</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                          <div class="form-group row">
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+
+                   <div class="">
+                       <button type="submit" class="btn btn-primary reset">Clear</button>
+
+                   </div>
+                    </div>
+                     </div>
                             </div>
                     </form>
                 </div>
@@ -46,5 +84,11 @@
 {% endblock %}
 
 {% block script %}
-
+<script>
+$(document).ready(function(){
+  $("#add_task").click(function(){
+    $("#div2").css("display", "block");
+  });
+});
+</script>
 {% endblock %}
