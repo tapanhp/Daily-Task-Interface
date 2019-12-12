@@ -10,7 +10,8 @@ ma = Marshmallow(app)
 
 projects = db.Table('projects',
                     db.Column('project_id', db.Integer, db.ForeignKey('project.project_id'), primary_key=True),
-                    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+                    db.Column('user_id', db.Integer, db.ForeignKey('user.user_id'), primary_key=True),
+                    db.PrimaryKeyConstraint('project_id', 'user_id')
                     )
 
 

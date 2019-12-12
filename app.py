@@ -97,7 +97,10 @@ def generate_report_main():
 
 @app.route("/table/")
 def render_table():
-    return render_template('tables.html')
+    context = {
+        'user_id': session['user'],
+    }
+    return render_template('tables.html',context=context)
 
 
 @app.route("/admin/")
