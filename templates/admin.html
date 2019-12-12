@@ -5,60 +5,182 @@
 
     <div id="content-wrapper">
         <div class="container-fluid">
-        <!-- DataTables Example -->
+            <!-- DataTables Example -->
             <div class="card mb-3">
                 <div class="card-header">
                     <i class="fa fa-user"></i>
-                 Admin</div>
-                     <div class="card-body">
-                         <div class="container">
-                             <form id="form">
-                                 <div class="form-group">
-                                     <label for="formGroupExampleInput">Add Projects</label>
-                                     <textarea class="form-control" id="formGroupExampleInput" rows="3" placeholder="Projects Name"></textarea>
-                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-1">
-                                    <button type="submit" class="btn btn-primary">Add</button>
-                                    </div>
-                                    <div class="col">
-                                        <button type="submit" class="btn btn-primary reset">Cancel</button>
-                                        <script>
-                                            $(document).ready(function(){
-                                                $(".reset").click(function(){
-                                                $("#form")[0].reset();
-                                            });});
-                                        </script>
-                                    </div>
-                                </div>
-                             </form>
-                             <br>
-                             <form action="{{ url_for('generate_report_main') }}">
-                                <div class="form-group row">
-                                    <div class="col">
-                                        <button type="submit" class="btn btn-primary">Generate Report</button>
-                                    </div>
-                                </div>
-                             </form>
-                         </div>
-                     </div>
+                    Admin
                 </div>
+                <div class="card-body">
+                    <div class="container">
+                        <form id="form">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Add Projects</label>
+                                <textarea class="form-control" id="project" rows="3"
+                                          placeholder="Projects Name"></textarea>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-1">
+                                    <button type="submit" class="btn btn-primary" onclick="create_project()">Add
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <form action="{{ url_for('generate_report_main') }}">
+                            <div class="form-group row">
+                                <div class="col">
+                                    <button type="submit" class="btn btn-primary">Generate Report</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <h2>Projects Table</h2>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>Projects</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <h2>Tasks Table</h2>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="taskTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+
+    <!-- Sticky Footer -->
+    <footer class="sticky-footer">
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>Copyright © Your Website 2019</span>
             </div>
         </div>
-      <!-- /.container-fluid -->
-
-      <!-- Sticky Footer -->
-      <footer class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright © Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
+    </footer>
     </div>
     <!-- /.content-wrapper -->
+{% endblock %}
+{% block script %}
+    <script>
 
+        $(document).ready(function () {
+            $.ajax({
+                url: "http://127.0.0.1:5000/project/",
+                type: 'GET',
+                dataType: 'json', // added data type
+                success: function (response) {
+                    for (var i = 0; i < response["data"].length; i++) {
+                        var task_data = '<tr>';
+                        task_data += '<td>' + response["data"][i]["project_name"] + '</td>';
+                        task_data += "<td><button class='btn' onclick='delete_project(" + response["data"][i]["project_id"] + ")'><i class='fa fa-trash'></i></button></td>";
+                        task_data += '</tr>';
+                        $('#dataTable tbody').append(task_data);
+                    }
+                    $('#dataTable').DataTable()
 
+                }
+            });
+
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+            $.ajax({
+                url: "http://127.0.0.1:5000/tasks/",
+                type: 'GET',
+                dataType: 'json', // added data type
+                success: function (response) {
+                    for (var i = 0; i < response["data"].length; i++) {
+                        var task_data = '<tr>';
+                        task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["project"]["project_name"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["task_title"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["status"] + '</td>';
+                        task_data += '<td>' + response["data"][i]["date"] + '</td>';
+                        task_data += "<td><button class='btn' onclick='delete_task(" + response["data"][i]["task_id"] + ")'><i class='fa fa-trash'></i></button></td>";
+
+                        task_data += '</tr>';
+                        $('#taskTable tbody').append(task_data);
+                    }
+                    $('#taskTable').DataTable()
+
+                }
+            });
+
+        });
+    </script>
+    <script>
+        function delete_task(task_id) {
+            $.ajax({
+                url: "http://127.0.0.1:5000/task/" + task_id + "/",
+                type: 'DELETE',
+                dataType: 'json', // added data type
+                success: function (response) {
+                    alert(response['message']);
+                    setInterval('location.reload()', 50);
+                }
+            });
+        }
+
+        function delete_project(project_id) {
+            $.ajax({
+                url: "http://127.0.0.1:5000/project/" + project_id + "/",
+                type: 'DELETE',
+                dataType: 'json', // added data type
+                success: function (response) {
+                    alert(response['message']);
+                    setInterval('location.reload()', 50);
+                }
+            });
+        }
+
+        function create_project() {
+            var pro={
+                    "project_name": $('#project').val(),
+                }
+                console.log(pro)
+            $.ajax({
+                url: "http://127.0.0.1:5000/project/",
+                type: 'POST',
+                contentType:"application/json",
+                data: JSON.stringify(pro),
+                dataType: 'json', // added data type
+                success: function (response) {
+                    alert(response['message']);
+                    setInterval('location.reload()', 50);
+                }
+            });
+        }
+
+    </script>
 {% endblock %}
 
