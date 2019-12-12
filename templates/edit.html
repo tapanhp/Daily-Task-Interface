@@ -16,15 +16,15 @@
                <div class="form-group">
                 <label for="exampleFormControlSelect1">Project</label>
                   <select class="form-control">
-                    <option>Project1</option>
-                    <option>Project2</option>
-                    <option>Project3</option>
+                    {% for project in context['projects'] %}
+                        <option value="{{  project['project_id'] }}">{{ project['project_name'] }}</option>
+                    {% endfor %}
                   </select>
                </div>
                 <div class="form-group">
                   <label for="formGroupExampleInput">Task</label>
                   <textarea class="form-control" id="formGroupExampleInput" rows="3"
-                            placeholder="Task Details"></textarea>
+                            placeholder="Task Details">{{ context['task_title'] }}</textarea>
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Status</label>
@@ -42,7 +42,9 @@
                 </div>
                 <div class="form-group" id="hidden_div">
                   <label for="exampleFormControlTextarea1">Reason</label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">
+                     {{ context['reason'] }}
+                  </textarea>
                 </div>
                 <br>
                 <div class="form-group row">
@@ -51,13 +53,6 @@
                   </div>
                   <div class="col">
                     <button type="submit" class="btn btn-primary reset">Cancel</button>
-                    <script>
-                      $(document).ready(function () {
-                        $(".reset").click(function () {
-                          $("#form")[0].reset();
-                        });
-                      });
-                    </script>
                   </div>
                 </div>
              </form>
@@ -76,5 +71,22 @@
       </footer>
     </div>
     <!-- /.content-wrapper -->
+
+{% endblock %}
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+            $.ajax({
+                url: "http://127.0.0.1:5000/taskinfo/1/",
+                type: 'GET',
+                dataType: 'json', // added data type
+                success: function (response) {
+                    console.log('response')
+                }
+            });
+
+        });
+</script>
 
 {% endblock %}
