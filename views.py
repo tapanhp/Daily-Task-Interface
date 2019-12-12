@@ -1,10 +1,11 @@
-from flask import request, render_template, make_response
+from flask import request, render_template, make_response,session
 from models import db
 from models import Tasks, Project, User, TaskSchema, ProjectSchema, UserSchema
 from response_utils import send_error_response, send_success_response
 import google_auth
 import pdfkit
 import datetime
+
 
 
 def generate_report():
@@ -171,9 +172,10 @@ def delete_project(project_id):
 def create_user():
     try:
         user_info = google_auth.get_user_info()
-        user = User.query.filter_by(user_name=user_info['name'])
+        user = User.query.filter_by(user_name=user_info['name']).first()
         if user:
             message = "User already exists"
+            session['user'] = user.user_id
             return send_success_response(message)
         if user_info['email'] == "tapan.inexture@gmail.com":
             user = User(user_name=user_info['name'], user_email=user_info['email'], is_admin=True)
@@ -181,9 +183,9 @@ def create_user():
             user = User(user_name=user_info['name'], user_email=user_info['email'])
         db.session.add(user)
         db.session.commit()
+        session['user'] = user.user_id
         message = "User created successfully"
         return send_success_response(message)
     except Exception as e:
-        print(e)
         message = "Error in creating user"
         return send_error_response(message)

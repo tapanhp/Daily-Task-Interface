@@ -2,7 +2,7 @@ import json
 import os
 import flask
 import google_auth
-from flask import render_template, redirect
+from flask import render_template, redirect, session
 
 app = flask.Flask(__name__)
 app.secret_key = "b']\xa0\x02\x94Rl\x15\x10z\x19\xdaEE\xbf\x08!'"
@@ -30,9 +30,12 @@ def login_required(func):
 def index():
     if google_auth.is_logged_in():
         response = create_user()
+        context={
+            'user_id':session['user'],
+                 }
         response = json.loads(response.get_data())
         if response['status']:
-            return render_template('tables.html')
+            return render_template('tables.html',context=context)
         else:
             return render_template('login.html')
     return render_template('login.html')
@@ -90,3 +93,28 @@ def delete_project_main(project_id):
 @login_required
 def generate_report_main():
     return generate_report()
+
+
+@app.route("/table/")
+def render_table():
+    return render_template('tables.html')
+
+
+@app.route("/admin/")
+def render_admin():
+    return render_template('admin.html')
+
+
+@app.route("/create_task/")
+def render_create():
+    return render_template('create.html')
+
+
+@app.route("/select/")
+def render_select():
+    return render_template('select.html')
+
+
+@app.route("/edit/")
+def render_edit():
+    return render_template('edit.html')
