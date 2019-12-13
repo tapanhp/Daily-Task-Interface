@@ -60,7 +60,7 @@ class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
         sqla_session = db.session
-        fields = ('user_id', 'user_name')
+        fields = ('user_id', 'user_name','is_admin')
 
 
 class TaskSchema(ma.ModelSchema):

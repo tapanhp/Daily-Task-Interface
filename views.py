@@ -93,7 +93,7 @@ def create_task():
         title = request.json.get('task_title')
         status = request.json.get('status')
         reason = request.json.get('reason')
-        user_name = request.json.get('user_name')
+        user_name = session['user']['user_name']
         user_obj = User.query.filter_by(user_name=user_name).first()
         project_obj = Project.query.filter_by(project_name=project_name).first()
         user_obj.projects.append(project_obj)
@@ -190,7 +190,10 @@ def create_user():
         user = User.query.filter_by(user_name=user_info['name']).first()
         if user:
             message = "User already exists"
-            session['user'] = user.user_id
+            user_schema = UserSchema()
+            data = user_schema.dump(user).data
+            session['user'] = data
+            print(session['user'])
             return send_success_response(message)
         if user_info['email'] == "tapan.inexture@gmail.com":
             user = User(user_name=user_info['name'], user_email=user_info['email'], is_admin=True)
@@ -198,7 +201,10 @@ def create_user():
             user = User(user_name=user_info['name'], user_email=user_info['email'])
         db.session.add(user)
         db.session.commit()
-        session['user'] = user.user_id
+        message = "User already exists"
+        user_schema = UserSchema()
+        data = user_schema.dump(user).data
+        session['user'] = data
         message = "User created successfully"
         return send_success_response(message)
     except Exception as e:

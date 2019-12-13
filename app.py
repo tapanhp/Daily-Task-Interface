@@ -31,7 +31,7 @@ def index():
     if google_auth.is_logged_in():
         response = create_user()
         context = {
-            'user_id': session['user'],
+            'user_id': session['user']['user_id'],
         }
         response = json.loads(response.get_data())
         if response['status']:
@@ -104,7 +104,7 @@ def generate_report_main():
 @app.route("/table/")
 def render_table():
     context = {
-        'user_id': session['user'],
+        'user_id': session['user']['user_id'],
     }
     return render_template('tables.html', context=context)
 
@@ -123,7 +123,11 @@ def render_create():
 def render_select():
     response = get_all_projects()
     response = json.loads(response.get_data())
-    return render_template('select.html', context=response['data'])
+    context={
+        'projects':response['data'],
+        'user':session['user']
+    }
+    return render_template('select.html', context=context)
 
 
 @app.route("/edit/<int:task_id>")
