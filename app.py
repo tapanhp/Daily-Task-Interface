@@ -127,6 +127,8 @@ def render_create():
 def render_select():
     response = get_all_projects()
     response = json.loads(response.get_data())
+    # last_task = json.loads(get_task(session['user']['user_id']).get_data())
+    # print(last_task)
     context = {
         'user': session['user']
     }
