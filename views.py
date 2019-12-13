@@ -119,7 +119,6 @@ def update_task(task_id):
         task.status = request.json.get('status', task.status)
         task.reason = request.json.get('reason', task.reason)
         task.project = Project.query.filter_by(project_name=project_name).first()
-        print(task.project)
         db.session.commit()
         task_schema = TaskSchema()
         data = task_schema.dump(task).data
