@@ -19,7 +19,7 @@ from views import create_task, get_task, get_all_tasks, update_task, delete_task
 def login_required(func):
     def wrapper(*args, **kwargs):
         if google_auth.is_logged_in():
-            return func()
+            return func(*args, **kwargs)
         return redirect("/")
 
     wrapper.__name__ = func.__name__
@@ -42,37 +42,37 @@ def index():
 
 
 @app.route('/tasks/', methods=['GET'])
-# @login_required
+@login_required
 def get_tasks():
     return get_all_tasks()
 
 
 @app.route('/task/<int:user_id>/', methods=['GET'])
-# @login_required
+@login_required
 def get_task_main(user_id):
     return get_task(user_id)
 
 
 @app.route('/taskinfo/<int:task_id>/', methods=['GET'])
-# @login_required
+@login_required
 def get_info_task(task_id):
     return get_task_info(task_id)
 
 
 @app.route('/task/', methods=["POST"])
-# @login_required
+@login_required
 def create_task_main():
     return create_task()
 
 
 @app.route('/task/<int:task_id>/', methods=['PUT'])
-# @login_required
+@login_required
 def update_task_main(task_id):
     return update_task(task_id)
 
 
 @app.route("/task/<int:task_id>/", methods=["DELETE"])
-# @login_required
+@login_required
 def delete_task_main(task_id):
     return delete_task(task_id)
 
@@ -84,13 +84,13 @@ def get_projects():
 
 
 @app.route('/project/', methods=["POST"])
-# @login_required
+@login_required
 def create_project_main():
     return create_project()
 
 
 @app.route("/project/<int:project_id>/", methods=["DELETE"])
-# @login_required
+@login_required
 def delete_project_main(project_id):
     return delete_project(project_id)
 
@@ -102,6 +102,7 @@ def generate_report_main():
 
 
 @app.route("/table/")
+@login_required
 def render_table():
     context = {
         'user_id': session['user']['user_id'],
@@ -110,16 +111,19 @@ def render_table():
 
 
 @app.route("/admin/")
+@login_required
 def render_admin():
     return render_template('admin.html')
 
 
 @app.route("/create_task/")
+@login_required
 def render_create():
     return render_template('create.html')
 
 
 @app.route("/select/")
+@login_required
 def render_select():
     response = get_all_projects()
     response = json.loads(response.get_data())
@@ -127,12 +131,12 @@ def render_select():
         'user': session['user']
     }
     if 'data' in response:
-        context.update(response['data'])
-
+        context.update({'projects':response['data']})
     return render_template('select.html', context=context)
 
 
 @app.route("/edit/<int:task_id>")
+@login_required
 def render_edit(task_id):
     response_project = json.loads(get_all_projects().get_data())
     response_task = json.loads(get_task_info(task_id).get_data())
