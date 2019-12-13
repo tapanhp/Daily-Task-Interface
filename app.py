@@ -78,7 +78,7 @@ def delete_task_main(task_id):
 
 
 @app.route("/project/", methods=["GET"])
-# @login_required
+@login_required
 def get_projects():
     return get_all_projects()
 
