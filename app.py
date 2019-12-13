@@ -13,7 +13,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 from views import create_task, get_task, get_all_tasks, update_task, delete_task, get_all_projects, create_project, \
-    delete_project, create_user, generate_report, get_task_info
+    delete_project, create_user,generate_report, get_task_info
 
 
 def login_required(func):
