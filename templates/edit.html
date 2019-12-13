@@ -15,44 +15,36 @@
               <form id="form">
                <div class="form-group">
                 <label for="exampleFormControlSelect1">Project</label>
-                  <select class="form-control">
+                  <select class="form-control" id="TaskProject">
                     {% for project in context['projects'] %}
-                        <option value="{{  project['project_id'] }}">{{ project['project_name'] }}</option>
+                        <option value="{{  project['project_name'] }}"{% if context['task']['project']['project_id']==project['project_id'] %} selected="selected"{% endif %}>{{ project['project_name'] }}</option>
                     {% endfor %}
                   </select>
                </div>
                 <div class="form-group">
                   <label for="formGroupExampleInput">Task</label>
-                  <textarea class="form-control" id="formGroupExampleInput" rows="3"
-                            placeholder="Task Details">{{ context['task_title'] }}</textarea>
+                  <textarea class="form-control" id="TaskInput" rows="3"
+                            placeholder="Task Details">{{ context['task']['task_title'] }}</textarea>
                 </div>
                 <div class="form-group">
                   <label for="exampleFormControlSelect1">Status</label>
-                  <select class="form-control" id="exampleFormControlSelect1" name="form_select"
-                          onchange="showDiv('hidden_div', this)">
-                    <option value="0">Green</option>
-                    <option value="1">Yellow</option>
-                    <option value="2">Red</option>
+                  <select class="form-control" id="TaskStatus" name="form_select" onchange="showDiv('hidden_div', this)">
+                    <option value="Green" {% if context['task']['status']=="Green" %} selected="selected"{% endif %}>Green</option>
+                    <option value="Yellow" {% if context['task']['status']=="Yellow" %} selected="selected"{% endif %}>Yellow</option>
+                    <option value="Red" {% if context['task']['status']=="Red" %} selected="selected"{% endif %}>Red</option>
                   </select>
-                  <script>
-                    function showDiv(divId, element) {
-                      document.getElementById(divId).style.display = element.value == 0 ? 'none' : 'block';
-                    }
-                  </script>
+
                 </div>
                 <div class="form-group" id="hidden_div">
                   <label for="exampleFormControlTextarea1">Reason</label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">
-                     {{ context['reason'] }}
+                  <textarea class="form-control" id="TaskReason" rows="3">
+                     {{ context['task']['reason'] }}
                   </textarea>
                 </div>
                 <br>
                 <div class="form-group row">
                   <div class="col-sm-1">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                  </div>
-                  <div class="col">
-                    <button type="submit" class="btn btn-primary reset">Cancel</button>
+                    <button type="submit" class="btn btn-primary" onclick="update_task()">Save</button>
                   </div>
                 </div>
              </form>
@@ -75,18 +67,41 @@
 {% endblock %}
 
 {% block script %}
+    <script>
+     var status= "{{ context['task']['status'] }}";
+             if(status=="Green"){
+                 document.getElementById("hidden_div").style.display = 'none';
+
+             }
+             else{
+                 document.getElementById("hidden_div").style.display = 'block';
+             }
+        function showDiv(divId, element) {
+            document.getElementById(divId).style.display = element.value == "Green" ? 'none' : 'block';
+        }
+    </script>
+
 <script>
-    $(document).ready(function () {
+function update_task() {
+    var task_id= {{ context['task']['task_id'] }};
+    var task={
+                    "task_title": $('#TaskInput').val(),
+                     "status":$('#TaskStatus').val(),
+                      "reason":$('#TaskReason').val(),
+                      "project_name":$('#TaskProject').val(),
+                }
             $.ajax({
-                url: "http://127.0.0.1:5000/taskinfo/1/",
-                type: 'GET',
+                url: "http://127.0.0.1:5000/task/"+task_id+"/",
+                type: 'PUT',
+                contentType:"application/json",
+                data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    console.log('response')
+                    alert(response['message']);
+                    setInterval('location.reload()', 50);
                 }
             });
-
-        });
+        }
 </script>
 
 {% endblock %}

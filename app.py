@@ -123,10 +123,12 @@ def render_create():
 def render_select():
     response = get_all_projects()
     response = json.loads(response.get_data())
-    context={
-        'projects':response['data'],
-        'user':session['user']
+    context = {
+        'user': session['user']
     }
+    if 'data' in response:
+        context.update(response['data'])
+
     return render_template('select.html', context=context)
 
 
@@ -136,6 +138,6 @@ def render_edit(task_id):
     response_task = json.loads(get_task_info(task_id).get_data())
     context = {
         'projects': response_project['data'],
-        'task': response_task['data']
+        'task': response_task['data'],
     }
     return render_template('edit.html', context=context)
