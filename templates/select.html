@@ -17,7 +17,7 @@
                                 <label for="exampleFormControlSelect1">Project</label>
                                 <select class="form-control" id="TaskProject" >
                                      {% for project in context['projects'] %}
-                                        <option value="{{  project['project_name'] }}">{{ project['project_name'] }}</option>
+                                        <option value="{{  project['project_name'] }}" >{{ project['project_name'] }}</option>
                                     {% endfor %}
                                 </select>
                                <div class="form-group row">
@@ -87,6 +87,7 @@ $(document).ready(function(){
 });
 
 function create_task() {
+            sessionStorage.setItem("ProjectName",$('#TaskProject').val());
             var task={
                     "task_title": $('#TaskInput').val(),
                      "status":$('#TaskStatus').val(),
@@ -101,7 +102,8 @@ function create_task() {
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    alert(response['message']);
+                    console.log(response['message']);
+                    alert('Hi'+response['message']);
                     setInterval('location.reload()', 50);
                 }
             });

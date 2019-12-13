@@ -2,7 +2,6 @@
 
 {% block content %}
 
-
     <div id="content-wrapper">
       <div class="container-fluid">
         <!-- DataTables Example -->
@@ -97,7 +96,8 @@ function update_task() {
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    alert(response['message']);
+                    console.log('Hi'+response);
+                    alert('Hi'+response['message']);
                     setInterval('location.reload()', 50);
                 }
             });
