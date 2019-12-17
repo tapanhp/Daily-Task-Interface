@@ -5,7 +5,7 @@ from response_utils import send_error_response, send_success_response
 import google_auth
 import pdfkit
 import datetime
-
+import html2text
 
 def generate_report():
     try:
@@ -29,11 +29,12 @@ def generate_report():
             print("In Generate report after context*****************")
             rendered = render_template("report.html", context=context)
             print("In Generate report render*****************",rendered)
-            pdf = pdfkit.from_string(rendered, False)
-            print("In Generate report pdf*****************",pdf)
+            #pdf = pdfkit.from_string(rendered, False)
+            text = html2text.html2text(rendered)
+            print("In Generate report pdf*****************",text)
             file_name = str(datetime.datetime.now().date()) + '_Task_Report'
-            response = make_response(pdf)
-            response.headers['Content_Type'] = 'application/pdf'
+            response = make_response(text)
+            response.headers['Content_Type'] = 'text/plain'
             response.headers['Content-Disposition'] = 'attachment; filename={}.pdf'.format(file_name)
             return response
         message = "Tasks or Projects are empty"
