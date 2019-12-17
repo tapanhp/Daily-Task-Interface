@@ -96,15 +96,14 @@ function create_task() {
                       "project_name":$('#TaskProject').val(),
                 }
             $.ajax({
-                url: "http://127.0.0.1:5000/task/",
+                url: "/task/",
                 type: 'POST',
                 contentType:"application/json",
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    console.log(response['message']);
-                    alert('Hi'+response['message']);
-                    setInterval('location.reload()', 50);
+                    alert(response['message']);
+                    location.reload();
                 }
             });
         }
