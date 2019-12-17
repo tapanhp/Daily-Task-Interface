@@ -9,22 +9,28 @@ import datetime
 
 def generate_report():
     try:
+        print("In Generate report*****************")
         task_project = []
         datenow = datetime.datetime.utcnow().date()
         tasks = Tasks.query.filter_by(date=datenow).all()
+        print("In Generate report task***",tasks)
         for task in tasks:
             projects = list(Project.query.filter_by(project_id=task.project_id))
             task_project.append(projects)
         from itertools import chain
         task_project = set(chain.from_iterable(task_project))
+        print("In Generate report task_project**************",task_project)
         if tasks and task_project:
             context = {
                 'tasks': tasks,
                 'projects': task_project,
                 'date': datenow,
             }
+            print("In Generate report after context*****************")
             rendered = render_template("report.html", context=context)
+            print("In Generate report render*****************",rendered)
             pdf = pdfkit.from_string(rendered, False)
+            print("In Generate report pdf*****************",pdf)
             file_name = str(datetime.datetime.now().date()) + '_Task_Report'
             response = make_response(pdf)
             response.headers['Content_Type'] = 'application/pdf'
@@ -145,15 +151,10 @@ def delete_task(task_id):
 
 def create_project():
     try:
-        print("In create project*********************")
         project_name = request.json.get('project_name')
-        print("Project name",project_name)
         project = Project(project_name=project_name)
-        print("project",project)
         db.session.add(project)
-        print("after add project in db")
         db.session.commit()
-        print("after commit")
         message = "Successfully created project"
         return send_success_response(message)
     except Exception as e:
@@ -207,7 +208,6 @@ def create_user():
             user = User(user_name=user_info['name'], user_email=user_info['email'])
         db.session.add(user)
         db.session.commit()
-        message = "User already exists"
         user_schema = UserSchema()
         data = user_schema.dump(user).data
         session['user'] = data

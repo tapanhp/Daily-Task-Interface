@@ -26,18 +26,13 @@ app = flask.Blueprint('google_auth', __name__)
 
 
 def is_logged_in():
-    print('Inside is logged in *************************************************************')
     return True if AUTH_TOKEN_KEY in flask.session else False
 
 
 def build_credentials():
-    print("IN build credentials ***********************************before")
     if not is_logged_in():
-        print("IN build credentials ***********************************before")
         raise Exception('User must be logged in')
-    print("before oauth2_tokens ***********************************")
     oauth2_tokens = flask.session[AUTH_TOKEN_KEY]
-    print("After oauth2_tokens ***********************************")
     return google.oauth2.credentials.Credentials(
         oauth2_tokens['access_token'],
         refresh_token=oauth2_tokens['refresh_token'],
@@ -47,9 +42,7 @@ def build_credentials():
 
 
 def get_user_info():
-    print("IN get user info***********************************before")
     credentials = build_credentials()
-    print("IN get user info*********************************** after credential")
     oauth2_client = googleapiclient.discovery.build(
         'oauth2', 'v2',
         credentials=credentials

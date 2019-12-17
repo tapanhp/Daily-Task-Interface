@@ -92,7 +92,6 @@ def get_projects():
 @app.route('/project/', methods=["POST"])
 @login_required
 def create_project_main():
-    print("In create project main************************")
     return create_project()
 
 
