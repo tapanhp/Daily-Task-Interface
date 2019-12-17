@@ -5,7 +5,9 @@ Date-{{ context['date'] }}
 {% for project in context["projects"] %}
     <p>Project- {{ project.project_name }}</p>
   {% for user in context["users"] %}
+      {% if project.project_id == user.projects.project_id %}
       <p>Name:{{ user.user_name }}</p>
+      {% endif %}
     {% for task in context["tasks"] %}
        {% if project.project_id == task.project_id and user.user_id == task.user.user_id %}
            <p>Task Details:{{ task.task_title }}</p>
