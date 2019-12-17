@@ -15,6 +15,7 @@ def generate_report():
         task_user = []
         datenow = datetime.datetime.utcnow().date()
         tasks = Tasks.query.filter_by(date=datenow).all()
+
         print("In Generate report task***", tasks)
         for task in tasks:
             projects = list(Project.query.filter_by(project_id=task.project_id))
@@ -26,6 +27,7 @@ def generate_report():
         task_user = set(chain.from_iterable(task_user))
         print("In Generate report task_project**************", task_project)
         if tasks and task_project:
+
             context = {
                 'tasks': tasks,
                 'projects': task_project,
