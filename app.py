@@ -3,6 +3,7 @@ import os
 import flask
 import google_auth
 from flask import render_template, redirect, session
+import logging
 
 app = flask.Flask(__name__)
 app.secret_key = "b']\xa0\x02\x94Rl\x15\x10z\x19\xdaEE\xbf\x08!'"
@@ -30,14 +31,19 @@ def login_required(func):
 def index():
     if google_auth.is_logged_in():
         response = create_user()
+        if 'user' in session:
+            user = session['user']['user_id']
+        else:
+            logging.debug("in anonnymous")
+            user = 'Anonymous'
         context = {
-            'user_id': session['user']['user_id'],
+            'user_id': user,
         }
         response = json.loads(response.get_data())
         if response['status']:
             return render_template('tables.html', context=context)
         else:
-            return render_template('login.html')
+            return str(response)
     return render_template('login.html')
 
 
@@ -86,6 +92,7 @@ def get_projects():
 @app.route('/project/', methods=["POST"])
 @login_required
 def create_project_main():
+    print("In create project main************************")
     return create_project()
 
 

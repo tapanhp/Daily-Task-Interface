@@ -90,15 +90,14 @@ function update_task() {
                       "project_name":$('#TaskProject').val(),
                 }
             $.ajax({
-                url: "http://127.0.0.1:5000/task/"+task_id+"/",
+                url: "/task/"+task_id+"/",
                 type: 'PUT',
                 contentType:"application/json",
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    console.log('Hi'+response);
-                    alert('Hi'+response['message']);
-                    setInterval('location.reload()', 50);
+                    alert(response['message']);
+                    location.reload();
                 }
             });
         }

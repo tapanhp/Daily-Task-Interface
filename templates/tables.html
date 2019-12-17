@@ -53,10 +53,12 @@
         $(document).ready(function () {
             var userid = {{ context['user_id'] }}
                 $.ajax({
-                    url: "http://127.0.0.1:5000/task/" + userid + "/",
+                    url: "/task/" + userid + "/",
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (response) {
+                        if(response["data"] !=undefined)
+                        {
                         for (var i = 0; i < response["data"].length; i++) {
                             var task_data = '<tr>';
                             task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
@@ -68,6 +70,7 @@
                             task_data += "<td><a class='nav-link' href='"+redirect_url+"'><i class='fa fa-pencil-square-o'></i></td>";
                             task_data += '</tr>';
                             $('#dataTable tbody').append(task_data);
+                        }
                         }
                         $('#dataTable').DataTable()
                     }

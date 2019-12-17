@@ -93,16 +93,19 @@
 
         $(document).ready(function () {
             $.ajax({
-                url: "http://127.0.0.1:5000/project/",
+                url: "/project/",
                 type: 'GET',
                 dataType: 'json', // added data type
                 success: function (response) {
+                    if(response["data"] !=undefined)
+                    {
                     for (var i = 0; i < response["data"].length; i++) {
                         var task_data = '<tr>';
                         task_data += '<td>' + response["data"][i]["project_name"] + '</td>';
                         task_data += "<td><button class='btn' onclick='delete_project(" + response["data"][i]["project_id"] + ")'><i class='fa fa-trash'></i></button></td>";
                         task_data += '</tr>';
                         $('#dataTable tbody').append(task_data);
+                    }
                     }
                     $('#dataTable').DataTable()
 
@@ -115,10 +118,12 @@
 
         $(document).ready(function () {
             $.ajax({
-                url: "http://127.0.0.1:5000/tasks/",
+                url: "/tasks/",
                 type: 'GET',
                 dataType: 'json', // added data type
                 success: function (response) {
+                    if(response["data"] !=undefined)
+                    {
                     for (var i = 0; i < response["data"].length; i++) {
                         var task_data = '<tr>';
                         task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
@@ -131,6 +136,7 @@
                         task_data += '</tr>';
                         $('#taskTable tbody').append(task_data);
                     }
+                    }
                     $('#taskTable').DataTable()
 
                 }
@@ -141,24 +147,24 @@
     <script>
         function delete_task(task_id) {
             $.ajax({
-                url: "http://127.0.0.1:5000/task/" + task_id + "/",
+                url: "/task/" + task_id + "/",
                 type: 'DELETE',
                 dataType: 'json', // added data type
                 success: function (response) {
                     alert(response['message']);
-                    setInterval('location.reload()', 50);
+                    location.reload();
                 }
             });
         }
 
         function delete_project(project_id) {
             $.ajax({
-                url: "http://127.0.0.1:5000/project/" + project_id + "/",
+                url: "/project/" + project_id + "/",
                 type: 'DELETE',
                 dataType: 'json', // added data type
                 success: function (response) {
                     alert(response['message']);
-                    setInterval('location.reload()', 50);
+                    location.reload();
                 }
             });
         }
@@ -167,16 +173,15 @@
             var pro={
                     "project_name": $('#project').val(),
                 }
-                console.log(pro)
             $.ajax({
-                url: "http://127.0.0.1:5000/project/",
+                url: "/project/",
                 type: 'POST',
                 contentType:"application/json",
                 data: JSON.stringify(pro),
                 dataType: 'json', // added data type
                 success: function (response) {
                     alert(response['message']);
-                    setInterval('location.reload()', 50);
+                    location.reload();
                 }
             });
         }

@@ -145,10 +145,15 @@ def delete_task(task_id):
 
 def create_project():
     try:
+        print("In create project*********************")
         project_name = request.json.get('project_name')
+        print("Project name",project_name)
         project = Project(project_name=project_name)
+        print("project",project)
         db.session.add(project)
+        print("after add project in db")
         db.session.commit()
+        print("after commit")
         message = "Successfully created project"
         return send_success_response(message)
     except Exception as e:
@@ -195,7 +200,6 @@ def create_user():
             user_schema = UserSchema()
             data = user_schema.dump(user).data
             session['user'] = data
-            print(session['user'])
             return send_success_response(message)
         if user_info['email'] == "tapan.inexture@gmail.com":
             user = User(user_name=user_info['name'], user_email=user_info['email'], is_admin=True)
@@ -211,4 +215,4 @@ def create_user():
         return send_success_response(message)
     except Exception as e:
         message = "Error in creating user"
-        return send_error_response(message)
+        return send_error_response(str(e))
