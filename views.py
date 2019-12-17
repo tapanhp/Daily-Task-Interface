@@ -35,7 +35,7 @@ def generate_report():
             file_name = str(datetime.datetime.now().date()) + '_Task_Report'
             response = make_response(text)
             response.headers['Content_Type'] = 'text/plain'
-            response.headers['Content-Disposition'] = 'attachment; filename={}.pdf'.format(file_name)
+            response.headers['Content-Disposition'] = 'attachment; filename={}.txt'.format(file_name)
             return response
         message = "Tasks or Projects are empty"
         return send_error_response(message)
