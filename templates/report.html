@@ -3,10 +3,10 @@
 <body>
 Date-{{ context['date'] }}
 {% for project in context["projects"] %}
-    <h1>Project- {{ project.project_name }}</h1>
+    <p>Project- {{ project.project_name }}</p>
     {% for task in context["tasks"] %}
        {% if project.project_id == task.project_id %}
-           <h4>Name:{{ task.user.user_name }}</h4>
+           <p>Name:{{ task.user.user_name }}</p>
            <p>Task Details:{{ task.task_title }}</p>
            <p>Status:{{ task.status }}</p>
                   {% if task.reason %}
