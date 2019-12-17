@@ -4,9 +4,10 @@
 Date-{{ context['date'] }}
 {% for project in context["projects"] %}
     <p>Project- {{ project.project_name }}</p>
+  {% for user in context["users"] %}
+      <p>Name:{{ user.user_name }}</p>
     {% for task in context["tasks"] %}
-       {% if project.project_id == task.project_id %}
-           <p>Name:{{ task.user.user_name }}</p>
+       {% if project.project_id == task.project_id and user.user_id == task.user.user_id %}
            <p>Task Details:{{ task.task_title }}</p>
            <p>Status:{{ task.status }}</p>
                   {% if task.reason %}
@@ -14,6 +15,7 @@ Date-{{ context['date'] }}
                   {% endif %}
         {% endif %}
     {% endfor %}
+  {% endfor %}
 {% endfor %}
 
 </body>
