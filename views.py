@@ -3,39 +3,40 @@ from models import db
 from models import Tasks, Project, User, TaskSchema, ProjectSchema, UserSchema
 from response_utils import send_error_response, send_success_response
 import google_auth
-import pdfkit
 import datetime
 import html2text
 
 
 def generate_report():
     try:
-        task_project = []
-        task_user = []
+        data_dict = {}
         datenow = datetime.datetime.utcnow().date()
         tasks = Tasks.query.filter_by(date=datenow).all()
         for task in tasks:
-            projects = list(Project.query.filter_by(project_id=task.project_id))
-            task_project.append(projects)
-            users = list(User.query.filter_by(user_id=task.user.user_id))
-            task_user.append(users)
-        from itertools import chain
-        task_project = set(chain.from_iterable(task_project))
-        task_user = set(chain.from_iterable(task_user))
-        if tasks and task_project:
-            context = {
-                'tasks': tasks,
-                'projects': task_project,
-                'date': datenow,
-                'users': task_user,
-            }
-            rendered = render_template("report.html", context=context)
-            text = html2text.html2text(rendered)
-            file_name = str(datetime.datetime.now().date()) + '_Task_Report'
-            response = make_response(text)
-            response.headers['Content_Type'] = 'text/plain'
-            response.headers['Content-Disposition'] = 'attachment; filename={}.txt'.format(file_name)
-            return response
+            project_task = []
+            if task.project.project_name not in data_dict:
+                project_task.append(task)
+                data_dict[task.project.project_name] = {task.user.user_name: project_task}
+            else:
+                if task.user.user_name not in data_dict[task.project.project_name].keys():
+                    project_task.append(task)
+                    data_dict[task.project.project_name].update({task.user.user_name: project_task})
+                else:
+                    project_task = data_dict[task.project.project_name][task.user.user_name]
+                    project_task.append(task)
+                    data_dict[task.project.project_name].update({task.user.user_name: project_task})
+        context = {
+            'date': datenow,
+            'pro_details': data_dict,
+        }
+        print(context)
+        rendered = render_template("report.html", context=context)
+        text = html2text.html2text(rendered)
+        file_name = str(datetime.datetime.now().date()) + '_Task_Report'
+        response = make_response(text)
+        response.headers['Content_Type'] = 'text/plain'
+        response.headers['Content-Disposition'] = 'attachment; filename={}.txt'.format(file_name)
+        return response
         message = "Tasks or Projects are empty"
         return send_error_response(message)
     except Exception as e:

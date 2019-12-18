@@ -6,6 +6,7 @@ from flask import render_template, redirect, session
 import logging
 
 app = flask.Flask(__name__)
+app.debug = True
 app.secret_key = "b']\xa0\x02\x94Rl\x15\x10z\x19\xdaEE\xbf\x08!'"
 app.register_blueprint(google_auth.app)
 project_dir = os.path.dirname(os.path.abspath(__file__))
