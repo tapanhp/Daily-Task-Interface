@@ -101,8 +101,30 @@ function create_task() {
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    alert(response['message']);
-                    location.reload();
+
+                    $.notify.addStyle('happyblue', {
+     html: "<div><span data-notify-text/></div>",
+     classes: {
+        base: {
+          "white-space": "nowrap",
+          "background-color": "lightblue",
+          "padding": "5px"
+        },
+        superblue: {
+          "color": "white",
+          "background-color": "blue"
+        }
+      }
+    });
+
+
+    $.notify(response['message'], {
+        style: 'happyblue',
+        className: 'superblue', // <-- just a comma, but really important
+        title: "Daily task Application",
+    });
+
+
                 }
             });
         }
