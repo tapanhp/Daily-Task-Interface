@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html>
 <body>
-Date-{{ context['date'] }}
-{% for project in context["projects"] %}
-    <p>Project- {{ project.project_name }}</p>
-  {% for user in context["users"] %}
-      <p>Name:{{ user.user_name }}</p>
-    {% for task in context["tasks"] %}
-       {% if project.project_id == task.project_id and user.user_id == task.user.user_id %}
-           <p>Task Details:{{ task.task_title }}</p>
-           <p>Status:{{ task.status }}</p>
-                  {% if task.reason %}
+<p>Date-{{ context['date'] }}</p>
+{% for key,parent_dict_item in context['pro_details'].items() %}
+          <p>Project Name:{{ key }}</p>
+   {% for name, tasks in parent_dict_item.items() %}
+       <p>Name:{{ name }}</p>
+       {% for task in tasks %}
+           <p>Task Name:{{ task.task_title }}</p>
+           <p>Task Status:{{ task.status }}</p>
+           {% if task.status !="Green" %}
            <p>Reason:{{ task.reason }}</p>
-                  {% endif %}
-        {% endif %}
-    {% endfor %}
-  {% endfor %}
+           {% endif %}
+           {% endfor %}
+   {% endfor %}
 {% endfor %}
 
 </body>
