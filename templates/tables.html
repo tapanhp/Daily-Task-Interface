@@ -11,7 +11,8 @@
                     Task Table
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
+                    <p id="no_task"  align="center">No Task found please Create task</p>
+                    <div class="table-responsive" id="task_table">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
@@ -59,6 +60,7 @@
                     success: function (response) {
                         if(response["data"] !=undefined)
                         {
+                            $('#no_task').hide()
                         for (var i = 0; i < response["data"].length; i++) {
                             var task_data = '<tr>';
                             task_data += '<td>' + response["data"][i]["user"]["user_name"] + '</td>';
@@ -71,8 +73,13 @@
                             task_data += '</tr>';
                             $('#dataTable tbody').append(task_data);
                         }
-                        }
                         $('#dataTable').DataTable()
+                        }
+                        else {
+                            $('#task_table').hide()
+                            $('#no_task').show()
+
+                        }
                     }
                 });
 
