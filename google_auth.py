@@ -13,8 +13,10 @@ AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=of
 
 AUTHORIZATION_SCOPE = 'openid email profile'
 
-AUTH_REDIRECT_URI = "http://prasenjit.pythonanywhere.com/google/auth"
-BASE_URI = "http://prasenjit.pythonanywhere.com/"
+# AUTH_REDIRECT_URI = "http://prasenjit.pythonanywhere.com/google/auth"
+# BASE_URI = "http://prasenjit.pythonanywhere.com/"
+AUTH_REDIRECT_URI = "http://127.0.0.1:5000/google/auth"
+BASE_URI = "http://127.0.0.1:5000/"
 CLIENT_ID = "815731898165-ijst9dbr18mauppj1cgl73oaoqnro4ga.apps.googleusercontent.com"
 CLIENT_SECRET = "a9vtafi8t1_VuFLaj3Ta_Iqm"
 
