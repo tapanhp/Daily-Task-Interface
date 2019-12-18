@@ -59,18 +59,18 @@
     <div id="wrapper">
         <!-- Sidebar -->
         <ul class="sidebar navbar-nav">
-            <li class="nav-item active">
+            <li class="nav-item ">
                 <a class="nav-link" href="{{ url_for('render_table') }}">
                     <i class="fa fa-fw fa-table"></i>
                     <span>Tables</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item ">
                 <a class="nav-link" href="{{ url_for('render_select') }}">
                     <i class="fa fa-plus-circle"></i>
                     <span>Create Task</span>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item ">
                 <a class="nav-link" href="{{ url_for('render_admin') }}">
                     <i class="fa fa-user"></i>
                     <span>Admin</span>
@@ -123,6 +123,21 @@
 
   <!-- Demo scripts for this page-->
   <script src="../static/js/datatables-demo.js"></script>
+  <script>
+$(function(){
+  var current_page_URL = location.href;
+  $( "a" ).each(function() {
+     if ($(this).attr("href") !== "#") {
+       var target_URL = $(this).prop("href");
+       if (target_URL == current_page_URL) {
+          $('sidebar a').parents('li, ul').removeClass('active');
+          $(this).parent('li').addClass('active');
+          return false;
+       }
+     }
+  });
+});
+  </script>
     {% block script %}
     {% endblock %}
 
