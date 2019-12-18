@@ -143,69 +143,6 @@
         });
     </script>
     <script>
-        function delete_task(task_id) {
-            $.ajax({
-                url: "/task/" + task_id + "/",
-                type: 'DELETE',
-                dataType: 'json', // added data type
-                success: function (response) {
-                    setTimeout(function(){  location.reload();}, 500);
-                   $.notify.addStyle('happyblue', {
-     html: "<div><span data-notify-text/></div>",
-     classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "lightblue",
-          "padding": "5px"
-        },
-        superblue: {
-          "color": "white",
-          "background-color": "blue"
-        }
-      }
-    });
-                    $.notify(response['message'], {
-        style: 'happyblue',
-        className: 'superblue', // <-- just a comma, but really important
-        title: "Daily task Application",
-
-    });
-
-
-                }
-            });
-        }
-
-        function delete_project(project_id) {
-            $.ajax({
-                url: "/project/" + project_id + "/",
-                type: 'DELETE',
-                dataType: 'json', // added data type
-                success: function (response) {
-                    setTimeout(function(){  location.reload();}, 500);
-                   $.notify.addStyle('happyblue', {
-     html: "<div><span data-notify-text/></div>",
-     classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "lightblue",
-          "padding": "5px"
-        },
-        superblue: {
-          "color": "white",
-          "background-color": "blue"
-        }
-      }
-    });
-                    $.notify(response['message'], {
-        style: 'happyblue',
-        className: 'superblue', // <-- just a comma, but really important
-        title: "Daily task Application",
-
-    });
-                }
-            });
-        }
 
         function create_project() {
             var pro={
@@ -243,6 +180,52 @@
             });
         }
 
+        function delete_project(project_id) {
+swal({
+  title: "Are you sure?",
+  text: "Your will not be able to recover this record!",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonClass: "btn-danger",
+  confirmButtonText: "Yes, delete it!",
+  closeOnConfirm: false
+},
+function(){
+    $.ajax({
+            url: "/project/" + project_id + "/",
+            type: 'DELETE',
+            dataType: 'json', // added data type
+            success: function (response) {
+                swal("Deleted!", "Your record has been deleted.", "success");
+                setTimeout(function(){  location.reload();}, 1000);
+            }
+        });
+});
+        }
+
+
+function delete_task(task_id) {
+swal({
+  title: "Are you sure?",
+  text: "Your will not be able to recover this record!",
+  type: "warning",
+  showCancelButton: true,
+  confirmButtonClass: "btn-danger",
+  confirmButtonText: "Yes, delete it!",
+  closeOnConfirm: false
+},
+function(){
+    $.ajax({
+            url: "/task/" + task_id + "/",
+            type: 'DELETE',
+            dataType: 'json', // added data type
+            success: function (response) {
+                swal("Deleted!", "Your file has been record.", "success");
+                setTimeout(function(){  location.reload();}, 1000);
+            }
+        });
+});
+        }
     </script>
 {% endblock %}
 

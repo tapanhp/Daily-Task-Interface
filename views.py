@@ -29,12 +29,11 @@ def generate_report():
             'date': datenow,
             'pro_details': data_dict,
         }
-        print(context)
         rendered = render_template("report.html", context=context)
-        text = html2text.html2text(rendered)
+        text = html2text.html2text(rendered).encode('utf-8')
         file_name = str(datetime.datetime.now().date()) + '_Task_Report'
         response = make_response(text)
-        response.headers['Content_Type'] = 'text/plain'
+        response.headers['Content_Type'] = 'text/html'
         response.headers['Content-Disposition'] = 'attachment; filename={}.txt'.format(file_name)
         return response
         message = "Tasks or Projects are empty"
