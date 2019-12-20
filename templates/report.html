@@ -8,9 +8,9 @@
        <p>{{ name }}</p>
        {% for task in tasks %}
            <p>{{ loop.index }}.{{ task.task_title }}</p>
-           <p>->Status -{{ task.status }}</p>
+           <p>->Status - {{ task.status }}</p>
            {% if task.status !="Green" %}
-           <p>->Reason -{{ task.reason }}</p>
+           <p>->Reason - {{ task.reason }}</p>
            {% endif %}
            {% endfor %}
    {% endfor %}
