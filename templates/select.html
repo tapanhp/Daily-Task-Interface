@@ -18,6 +18,8 @@
                                 <select class="form-control" id="TaskProject" >
                                      {% for project in context['projects'] %}
                                         <option value="{{  project['project_name'] }}" >{{ project['project_name'] }}</option>
+                                    {% else %}
+                                         <option disabled selected >No Projects Avail.</option>
                                     {% endfor %}
                                 </select>
                                <div class="form-group row">
