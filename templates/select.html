@@ -22,11 +22,12 @@
                                          <option disabled selected >No Projects Avail.</option>
                                     {% endfor %}
                                 </select>
+                               <br>
                                <div class="form-group row">
                                 <div class="col-sm-6">
-                                    <button class="btn" type="button" id="add_task" style="border:none;" >
+                                    <a href="#" id="add_task" >
                                     <i class="fa fa-plus-circle"></i> Add
-                                        Task</button>
+                                        Task</a>
 
                                 </div>
                             </div>
@@ -52,7 +53,7 @@
                     </div>
                     <div class="form-group" id="hidden_div">
                         <label for="exampleFormControlTextarea1">Reason</label>
-                        <textarea class="form-control" id="TaskReason" rows="3"></textarea>
+                        <textarea class="form-control" id="TaskReason" rows="3" placeholder="Reason"></textarea>
                     </div>
                           <div class="form-group row">
                         <div class="col-sm-2">
@@ -103,29 +104,30 @@ function create_task() {
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
+                var successOptions = {
+      autoHideDelay: 2000,
+      showAnimation: "fadeIn",
+      hideAnimation: "fadeOut",
+      hideDuration: 70,
+      arrowShow: false,
+      className: "success",
+  };
+                                       var failOptions = {
+      autoHideDelay: 2000,
+      showAnimation: "fadeIn",
+      hideAnimation: "fadeOut",
+      hideDuration: 70,
+      arrowShow: false,
+      className: "error",
+  };
 
-                    $.notify.addStyle('happyblue', {
-     html: "<div><span data-notify-text/></div>",
-     classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "lightblue",
-          "padding": "5px"
-        },
-        superblue: {
-          "color": "white",
-          "background-color": "blue"
-        }
-      }
-    });
-
-
-    $.notify(response['message'], {
-        style: 'happyblue',
-        className: 'superblue', // <-- just a comma, but really important
-        title: "Daily task Application",
-    });
-
+    $('.notifyjs-corner').empty();
+    if(response['status']=="1") {
+        $.notify(response['message'], successOptions);
+    }
+    else{
+        $.notify(response['message'], failOptions);
+    }
         $('#TaskInput').val("");
         $('#TaskReason').val("");
                 }

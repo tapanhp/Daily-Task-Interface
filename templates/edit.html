@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group" id="hidden_div">
                   <label for="exampleFormControlTextarea1">Reason</label>
-                  <textarea class="form-control" id="TaskReason" rows="3">{% if context['task']['reason'] %}{{ context['task']['reason'] }}{% endif %}</textarea>
+                  <textarea class="form-control" id="TaskReason" rows="3" placeholder="Reason">{% if context['task']['reason'] %}{{ context['task']['reason'] }}{% endif %}</textarea>
                 </div>
                 <br>
                 <div class="form-group row">
@@ -92,28 +92,32 @@ function update_task() {
                 data: JSON.stringify(task),
                 dataType: 'json', // added data type
                 success: function (response) {
-                    $.notify.addStyle('happyblue', {
-     html: "<div><span data-notify-text/></div>",
-     classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "lightblue",
-          "padding": "5px"
-        },
-        superblue: {
-          "color": "white",
-          "background-color": "blue"
-        }
-      }
-    });
+                  var successOptions = {
+      autoHideDelay: 2000,
+      showAnimation: "fadeIn",
+      hideAnimation: "fadeOut",
+      hideDuration: 70,
+      arrowShow: false,
+      className: "success",
+  };
+                  var failOptions = {
+      autoHideDelay: 2000,
+      showAnimation: "fadeIn",
+      hideAnimation: "fadeOut",
+      hideDuration: 70,
+      arrowShow: false,
+      className: "error",
+  };
 
+    $('.notifyjs-corner').empty();
 
-    $.notify(response['message'], {
-        style: 'happyblue',
-        className: 'superblue', // <-- just a comma, but really important
-        title: "Daily task Application"
-    });
-                    setTimeout(function(){ window.location = "/table/"; }, 1000);
+    if(response['status']=="1") {
+        $.notify(response['message'], successOptions);
+    }
+    else{
+        $.notify(response['message'], failOptions);
+    }
+    setTimeout(function(){ window.location = "/table/"; }, 1000);
 
                 }
             });

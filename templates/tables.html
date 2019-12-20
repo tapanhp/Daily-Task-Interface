@@ -73,7 +73,11 @@
                             task_data += '</tr>';
                             $('#dataTable tbody').append(task_data);
                         }
-                        $('#dataTable').DataTable()
+                        $('#dataTable').DataTable({
+                            "columnDefs": [
+    { "orderable": false, "targets": 5 }
+  ]
+    });
                         }
                         else {
                             $('#no_task').show()
