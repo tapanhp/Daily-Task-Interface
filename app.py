@@ -3,7 +3,6 @@ import os
 import flask
 import google_auth
 from flask import render_template, redirect, session
-import logging
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -35,7 +34,6 @@ def index():
         if 'user' in session:
             user = session['user']['user_id']
         else:
-            logging.debug("in anonnymous")
             user = 'Anonymous'
         context = {
             'user_id': user,
