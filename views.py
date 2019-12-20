@@ -5,7 +5,7 @@ from response_utils import send_error_response, send_success_response
 import google_auth
 import datetime
 import html2text
-
+from sqlalchemy import desc
 
 def generate_report():
     try:
@@ -46,7 +46,7 @@ def generate_report():
 
 def get_all_tasks():
     try:
-        task = Tasks.query.all()
+        task = Tasks.query.order_by(desc(Tasks.date)).all()
         if not task:
             message = "There is no task"
             return send_success_response(message)
@@ -63,7 +63,7 @@ def get_all_tasks():
 def get_task(user_id):
     try:
         user = User.query.get(user_id)
-        task = Tasks.query.filter_by(user=user).all()
+        task = Tasks.query.filter_by(user=user).order_by(desc(Tasks.date)).all()
         if not task:
             message = "There is no task of user" + user.user_name
             return send_success_response(message)
