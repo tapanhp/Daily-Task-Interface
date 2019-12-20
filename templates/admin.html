@@ -196,7 +196,13 @@ function(){
             type: 'DELETE',
             dataType: 'json', // added data type
             success: function (response) {
-                swal("Deleted!", "Your record has been deleted.", "success");
+                if(response['status']=="1") {
+                    swal("Deleted!", "Your record has been deleted.", "success");
+                }
+                else
+                {
+                 swal("Error!", "Your record has related to other tasks.", "error");
+                }
                 setTimeout(function(){  location.reload();}, 1000);
             }
         });
@@ -220,7 +226,13 @@ function(){
             type: 'DELETE',
             dataType: 'json', // added data type
             success: function (response) {
-                swal("Deleted!", "Your file has been record.", "success");
+                if(response['status']=="1") {
+                    swal("Deleted!", "Your record has been deleted.", "success");
+                }
+                else
+                {
+                 swal("Error!", "Your record is not deleted.", "error");
+                }
                 setTimeout(function(){  location.reload();}, 1000);
             }
         });
