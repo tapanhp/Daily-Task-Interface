@@ -105,7 +105,11 @@
                         $('#dataTable tbody').append(task_data);
                     }
                     }
-                    $('#dataTable').DataTable()
+                    $('#dataTable').DataTable({
+                        "columnDefs": [
+    { "orderable": false, "targets": 1 }
+  ]
+                    });
 
                 }
             });
@@ -135,7 +139,15 @@
                         $('#taskTable tbody').append(task_data);
                     }
                     }
-                    $('#taskTable').DataTable()
+                    $('#taskTable').DataTable(
+                        {
+        "aLengthMenu": [[25, 50, 75, -1], [25, 50, 75, "All"]],
+        "iDisplayLength": 25,
+                            "columnDefs": [
+    { "orderable": false, "targets": 5 }
+  ]
+    }
+                    );
 
                 }
             });
@@ -156,26 +168,30 @@
                 dataType: 'json', // added data type
                 success: function (response) {
                     setTimeout(function(){  location.reload();}, 500);
-                   $.notify.addStyle('happyblue', {
-     html: "<div><span data-notify-text/></div>",
-     classes: {
-        base: {
-          "white-space": "nowrap",
-          "background-color": "lightblue",
-          "padding": "5px"
-        },
-        superblue: {
-          "color": "white",
-          "background-color": "blue"
-        }
-      }
-    });
-                    $.notify(response['message'], {
-        style: 'happyblue',
-        className: 'superblue', // <-- just a comma, but really important
-        title: "Daily task Application",
+                   var successOptions = {
+      autoHideDelay: 2000,
+      showAnimation: "fadeIn",
+      hideAnimation: "fadeOut",
+      hideDuration: 70,
+      arrowShow: false,
+      className: "success",
+  };
+                                       var failOptions = {
+      autoHideDelay: 2000,
+      showAnimation: "fadeIn",
+      hideAnimation: "fadeOut",
+      hideDuration: 70,
+      arrowShow: false,
+      className: "error",
+  };
 
-    });
+    $('.notifyjs-corner').empty();
+    if(response['status']=="1") {
+        $.notify(response['message'], successOptions);
+    }
+    else{
+        $.notify(response['message'], failOptions);
+    }
                 }
             });
         }
