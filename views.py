@@ -6,11 +6,12 @@ import google_auth
 import datetime
 import html2text
 from sqlalchemy import desc
+import pytz
 
 def generate_report():
     try:
         data_dict = {}
-        datenow = datetime.datetime.utcnow().date()
+        datenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date()
         tasks = Tasks.query.filter_by(date=datenow).all()
         for task in tasks:
             project_task = []
