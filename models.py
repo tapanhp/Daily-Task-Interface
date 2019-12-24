@@ -1,7 +1,7 @@
 import datetime
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import fields
-
+import pytz
 from app import app
 from flask_marshmallow import Marshmallow
 
@@ -41,7 +41,7 @@ class Tasks(db.Model):
     task_title = db.Column(db.String(500), unique=True, nullable=False)
     status = db.Column(db.String, nullable=False)
     reason = db.Column(db.Text, nullable=True)
-    date = db.Column(db.Date, default=datetime.datetime.utcnow().date(), onupdate=datetime.datetime.utcnow().date())
+    date = db.Column(db.Date, default=datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date(), onupdate=datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date())
     project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 

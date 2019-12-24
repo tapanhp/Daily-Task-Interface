@@ -36,8 +36,6 @@ def generate_report():
         response.headers['Content_Type'] = 'text/plain'
         response.headers['Content-Disposition'] = 'attachment; filename={}.txt'.format(file_name)
         return response
-        message = "Tasks or Projects are empty"
-        return send_error_response(message)
     except Exception as e:
         print(e)
         message = "Error in generating tasks"
