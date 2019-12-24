@@ -11,7 +11,7 @@ import pytz
 def generate_report():
     try:
         data_dict = {}
-        datenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date()
+        datenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata').date())
         tasks = Tasks.query.filter_by(date=datenow).all()
         for task in tasks:
             project_task = []
