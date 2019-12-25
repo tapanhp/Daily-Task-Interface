@@ -215,3 +215,25 @@ def create_user():
     except Exception as e:
         message = "Error in creating user"
         return send_error_response(str(e))
+
+
+def user_status():
+    try:
+        user_dict = {}
+        user_status = set()
+        datenow = datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date()
+        tasks = Tasks.query.filter_by(date=datenow).all()
+        users = User.query.all()
+        for task in tasks:
+            user_status.add(task.user.user_name)
+        for user in users:
+            if user.user_name in user_status:
+                user_dict.update({user.user_name: True})
+            else:
+                user_dict.update({user.user_name: False})
+        return user_dict
+    except Exception as e:
+        print(e)
+        message = "Error in user status"
+        return send_error_response(message)
+

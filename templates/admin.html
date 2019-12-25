@@ -14,25 +14,25 @@
                 <div class="card-body">
                     <div class="container">
                             <div class="form-group">
-                                <label for="formGroupExampleInput">Add Projects</label>
-                                <textarea class="form-control" id="project" rows="3"
-                                          placeholder="Projects Name"></textarea>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-1">
+                                   <label for="formGroupExampleInput">Add Projects</label>
+                                    <textarea class="form-control" id="project" rows="3"
+                                          placeholder="Projects Name" style="width: 60%"></textarea>
+                                   <br>
                                     <button type="submit" class="btn btn-primary" onclick="create_project()">Add
                                     </button>
-                                </div>
-                            </div>
-                        <br>
-                        <form action="{{ url_for('generate_report_main') }}">
+                                    <br>
+                                    <br>
+                                    <form action="{{ url_for('generate_report_main') }}">
                             <div class="form-group row">
                                 <div class="col">
                                     <button type="submit" class="btn btn-primary">Generate Report</button>
                                 </div>
                             </div>
                         </form>
+                            </div>
                     </div>
+                      <br>
+                      <div class="form-group">
                     <h2>Projects Table</h2>
                     <br>
                     <div class="table-responsive" style="width:60%">
@@ -48,6 +48,32 @@
                             </tbody>
                         </table>
                     </div>
+                        </div>
+                      <br>
+                       <div class="form-group">
+                    <h2>Task status</h2>
+                       <br>
+                    <div class="table-responsive" style="width:60%">
+                        <table class="table table-bordered" id="StatTable"   cellspacing="0">
+                            <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                 {% for user,status in context.items() %}
+                                     {% if status == False %}
+                                     <tr>
+                                         <td>{{ user }}</td>
+                                         <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                                     </tr>
+                                     {% endif %}
+                                 {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                       </div>
                     <br>
                     <h2>Tasks Table</h2>
                     <br>
@@ -106,6 +132,11 @@
                     }
                     }
                     $('#dataTable').DataTable({
+                        "columnDefs": [
+    { "orderable": false, "targets": 1 }
+  ]
+                    });
+                    $('#StatTable').DataTable({
                         "columnDefs": [
     { "orderable": false, "targets": 1 }
   ]
