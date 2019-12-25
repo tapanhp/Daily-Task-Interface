@@ -37,11 +37,16 @@ class User(db.Model):
 
 
 class Tasks(db.Model):
+
+    def get_current_ist_time():
+        return datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date()
+
     task_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     task_title = db.Column(db.String(500), unique=True, nullable=False)
     status = db.Column(db.String, nullable=False)
     reason = db.Column(db.Text, nullable=True)
-    date = db.Column(db.Date, default=datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date(), onupdate=datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date())
+    date = db.Column(db.Date, default=get_current_ist_time(),
+                     onupdate=get_current_ist_time())
     project_id = db.Column(db.Integer, db.ForeignKey('project.project_id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
 
@@ -60,7 +65,7 @@ class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
         sqla_session = db.session
-        fields = ('user_id', 'user_name','is_admin')
+        fields = ('user_id', 'user_name', 'is_admin')
 
 
 class TaskSchema(ma.ModelSchema):
