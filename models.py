@@ -42,7 +42,7 @@ class Tasks(db.Model):
         return datetime.datetime.now(pytz.timezone('Asia/Kolkata')).date()
 
     task_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
-    task_title = db.Column(db.String(500), unique=True, nullable=False)
+    task_title = db.Column(db.String(500), nullable=False)
     status = db.Column(db.String, nullable=False)
     reason = db.Column(db.Text, nullable=True)
     date = db.Column(db.Date, default=get_current_ist_time(),
