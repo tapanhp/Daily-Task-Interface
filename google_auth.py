@@ -48,7 +48,6 @@ def get_user_info():
         'oauth2', 'v2',
         credentials=credentials
                             ,cache_discovery=False)
-    print("Got oauth2 client")
 
     return oauth2_client.userinfo().get().execute()
 
