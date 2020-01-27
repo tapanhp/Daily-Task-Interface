@@ -4,9 +4,14 @@ from marshmallow import fields
 import pytz
 from app import app
 from flask_marshmallow import Marshmallow
+from flask_script import Manager
+from flask_migrate import Migrate,MigrateCommand
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db,compare_type=True)
+manager = Manager(app)
 ma = Marshmallow(app)
+manager.add_command('db', MigrateCommand)
 
 projects = db.Table('projects',
                     db.Column('project_id', db.Integer, db.ForeignKey('project.project_id'), primary_key=True),
@@ -17,6 +22,7 @@ projects = db.Table('projects',
 class Project(db.Model):
     project_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True, autoincrement=True)
     project_name = db.Column(db.String(50), unique=True, nullable=False)
+    in_report = db.Column(db.Boolean, unique=False, default=True)
     tasks = db.relationship('Tasks', backref="project")
 
     def __str__(self):
@@ -58,7 +64,7 @@ class ProjectSchema(ma.ModelSchema):
     class Meta:
         model = Project
         sqla_session = db.session
-        fields = ('project_id', 'project_name')
+        fields = ('project_id', 'project_name','in_report')
 
 
 class UserSchema(ma.ModelSchema):
@@ -75,3 +81,6 @@ class TaskSchema(ma.ModelSchema):
 
     project = fields.Nested(ProjectSchema)
     user = fields.Nested(UserSchema)
+
+if __name__=="__main__":
+    manager.run()

@@ -3,7 +3,8 @@
 <body>
 <p>Date-{{ context['date'] }}</p>
 {% for key,parent_dict_item in context['pro_details'].items() %}
-          <p>*P - {{ key }}*</p>
+    {% if key.in_report !=False %}
+          <p>*P - {{ key.project_name }}*</p>
    {% for name, tasks in parent_dict_item.items() %}
        <p>{{ name }}</p>
        {% for task in tasks %}
@@ -14,6 +15,7 @@
            {% endif %}
            {% endfor %}
    {% endfor %}
+    {% endif %}
 {% endfor %}
 
 </body>

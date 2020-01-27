@@ -122,12 +122,6 @@ def render_admin():
     return render_template('admin.html',context=user_stat)
 
 
-@app.route("/create_task/")
-@login_required
-def render_create():
-    return render_template('create.html')
-
-
 @app.route("/select/")
 @login_required
 def render_select():
