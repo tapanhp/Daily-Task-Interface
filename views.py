@@ -15,17 +15,17 @@ def generate_report():
         tasks = Tasks.query.filter_by(date=datenow).all()
         for task in tasks:
             project_task = []
-            if task.project.project_name not in data_dict:
+            if task.project not in data_dict:
                 project_task.append(task)
-                data_dict[task.project.project_name] = {task.user.user_name: project_task}
+                data_dict[task.project] = {task.user.user_name: project_task}
             else:
-                if task.user.user_name not in data_dict[task.project.project_name].keys():
+                if task.user.user_name not in data_dict[task.project].keys():
                     project_task.append(task)
-                    data_dict[task.project.project_name].update({task.user.user_name: project_task})
+                    data_dict[task.project].update({task.user.user_name: project_task})
                 else:
-                    project_task = data_dict[task.project.project_name][task.user.user_name]
+                    project_task = data_dict[task.project][task.user.user_name]
                     project_task.append(task)
-                    data_dict[task.project.project_name].update({task.user.user_name: project_task})
+                    data_dict[task.project].update({task.user.user_name: project_task})
         context = {
             'date': datenow,
             'pro_details': data_dict,
@@ -151,7 +151,8 @@ def delete_task(task_id):
 def create_project():
     try:
         project_name = request.json.get('project_name')
-        project = Project(project_name=project_name)
+        in_report = request.json.get('in_report')
+        project = Project(project_name=project_name, in_report = in_report)
         db.session.add(project)
         db.session.commit()
         message = "Successfully created project"
