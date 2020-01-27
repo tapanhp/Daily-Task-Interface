@@ -255,6 +255,7 @@
                             } else {
                                 swal("Error!", "Your record has related to other tasks.", "error");
                             }
+                            setTimeout(function(){  location.reload();}, 1000);
                         }
                     });
                 });
@@ -282,6 +283,7 @@
                             } else {
                                 swal("Error!", "Your record is not deleted.", "error");
                             }
+                            setTimeout(function(){  location.reload();}, 1000);
                         }
                     });
                 });
